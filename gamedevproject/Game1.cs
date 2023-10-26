@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using gamedevproject.PlayerClasses;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,9 +9,8 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
         private Texture2D _texture;
-        private Vector2 _position;
+        private Player player;
 
         public Game1()
         {
@@ -22,8 +22,12 @@ namespace gamedevproject
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
+        }
+
+        private void InitializeGameObjects()
+        {
+            player = new Player(_texture);
         }
 
         protected override void LoadContent()
@@ -32,7 +36,9 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _texture = Content.Load<Texture2D>("player-idle-48x48"); 
+            _texture = Content.Load<Texture2D>("player-idle-48x48");
+
+            InitializeGameObjects();
         }
 
         protected override void Update(GameTime gameTime)
@@ -41,6 +47,7 @@ namespace gamedevproject
                 Exit();
 
             // TODO: Add your update logic here
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -52,7 +59,7 @@ namespace gamedevproject
             // TODO: Add your drawing code here
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_texture, _position, Color.White);
+            player.Draw(_spriteBatch);
             _spriteBatch.End();
 
 
