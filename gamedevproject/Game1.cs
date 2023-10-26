@@ -9,6 +9,9 @@ namespace gamedevproject
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Texture2D _texture;
+        private Vector2 _position;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -28,6 +31,8 @@ namespace gamedevproject
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            _texture = Content.Load<Texture2D>("player-idle-48x48"); 
         }
 
         protected override void Update(GameTime gameTime)
@@ -42,9 +47,14 @@ namespace gamedevproject
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightGray);
 
             // TODO: Add your drawing code here
+
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_texture, _position, Color.White);
+            _spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
