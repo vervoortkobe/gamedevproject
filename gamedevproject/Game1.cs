@@ -1,4 +1,5 @@
 ﻿using gamedevproject.AnimationClasses;
+using gamedevproject.InputClasses;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,7 +29,7 @@ namespace gamedevproject
 
         private void InitializeGameObjects()
         {
-            player = new Player(_texture);
+            player = new Player(_texture, new KeyboardReader());
         }
 
         protected override void LoadContent()

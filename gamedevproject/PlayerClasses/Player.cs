@@ -16,21 +16,23 @@ namespace gamedevproject.PlayerClasses
         public Animation animation;
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
-        public Vector2 Acceleration = new Vector2(0.1f, 0.1f);
-        
+        public Vector2 Acceleration { get; set; }
         public float maxVelocity = 10;
-
         Texture2D playerTexture;
+        private IInputReader inputReader;
 
-        public Player(Texture2D texture)
+
+        public Player(Texture2D texture, IInputReader inputReader)
         {
-            playerTexture = texture;
+            this.playerTexture = texture;
+            this.inputReader = inputReader;
 
             animation = new Animation();
             animation.GetFramesFromTexture(texture.Width, texture.Height, 10, 1);
 
-            Position = new Vector2(0, 0);
-            Velocity = new Vector2(1, 1);
+            Position = new Vector2(1, 1);
+            Velocity = new Vector2(2, 2);
+            Acceleration = new Vector2(0.1f, 0.1f);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -42,33 +44,39 @@ namespace gamedevproject.PlayerClasses
 
         public void Update(GameTime gameTime)
         {
-            KeyboardState state = Keyboard.GetState();
+            /*KeyboardState state = Keyboard.GetState();
             var direction = Vector2.Zero;
             if (state.IsKeyDown(Keys.Left)) direction.X -= 1;
             if (state.IsKeyDown(Keys.Right)) direction.X += 1;
             direction *= Velocity;
-            Position += direction;
+            var direction = inputReader.ReadInput(); direction *= Velocity;
+            Position += direction;*/
 
-            animation.Update(gameTime);
             Move();
+            animation.Update(gameTime);
+
         }
 
         private void Move()
         {
-            Position += Velocity;
+            /*Position += Velocity;
             Velocity += Acceleration;
 
             Velocity = Limit(Velocity, maxVelocity);
 
             if (Position.X > 800 - 48 || Position.X < 0) {
                 Velocity = new Vector2(Velocity.X * -1, Velocity.Y);
-                Acceleration.X *= -1;
+                Acceleration = new Vector2(Acceleration.X * -1, Acceleration.Y);
             }
             if (Position.Y > 480 - 48 || Position.Y < 0)
             {
                 Velocity = new Vector2(Velocity.X, Velocity.Y * -1);
-                Acceleration.Y *= -1;
-            }
+                Acceleration = new Vector2(Acceleration.X, Acceleration.Y * -1);
+            }*/
+
+            var direction = inputReader.ReadInput();
+            direction *= Velocity;
+            Position += direction;
         }
 
         private Vector2 Limit(Vector2 v, float max)
