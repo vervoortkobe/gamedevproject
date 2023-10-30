@@ -2,6 +2,7 @@
 using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +36,19 @@ namespace gamedevproject.PlayerClasses
         public void Draw(SpriteBatch spriteBatch)
         {
             //scale x2
-            //spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+            //spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0, Vector2.Zero, 3, SpriteEffects.None, 0);
             spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White);
         }
 
         public void Update(GameTime gameTime)
         {
+            KeyboardState state = Keyboard.GetState();
+            var direction = Vector2.Zero;
+            if (state.IsKeyDown(Keys.Left)) direction.X -= 1;
+            if (state.IsKeyDown(Keys.Right)) direction.X += 1;
+            direction *= Velocity;
+            Position += direction;
+
             animation.Update(gameTime);
             Move();
         }
