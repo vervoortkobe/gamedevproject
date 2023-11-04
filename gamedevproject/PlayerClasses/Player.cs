@@ -1,5 +1,6 @@
 ﻿using gamedevproject.AnimationClasses;
 using gamedevproject.Interfaces;
+using gamedevproject.MovementClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,13 +20,14 @@ namespace gamedevproject.PlayerClasses
         public Vector2 Acceleration { get; set; }
         public float maxVelocity = 10;
         Texture2D playerTexture;
-        private IInputReader inputReader;
+        public IInputReader InputReader { get; set; }
+        private MovementManager movementManager = new MovementManager();
 
 
         public Player(Texture2D texture, IInputReader inputReader)
         {
             this.playerTexture = texture;
-            this.inputReader = inputReader;
+            this.InputReader = inputReader;
 
             animation = new Animation();
             animation.GetFramesFromTexture(texture.Width, texture.Height, 10, 1);
@@ -50,9 +52,7 @@ namespace gamedevproject.PlayerClasses
 
         private void Move()
         {
-            var direction = inputReader.ReadInput();
-            direction *= Velocity;
-            Position += direction;
+            movementManager.Move(this);
         }
 
         private Vector2 Limit(Vector2 v, float max)
