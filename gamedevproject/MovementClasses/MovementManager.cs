@@ -1,10 +1,6 @@
 ﻿using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.MovementClasses
 {
@@ -12,45 +8,23 @@ namespace gamedevproject.MovementClasses
     {
         public void Move(IMovable movable)
         {
-            var m = movable;
-            var direction = m.InputReader.ReadInput();
-            direction *= m.Speed;
-            m.Position += direction;
-            m.Speed += m.Acceleration;
-            m.Speed = Limit(m.Speed, m.MaxSpeed);
+            var input = movable.InputReader.ReadInput();
 
-            /*if (movable.InputReader.IsDestinationalInput)
-            {
-                direction -= movable.Position;
-                direction.Normalize();
-            }
+            movable.StateManager.CurrentState.HandleInput(input);
 
-            var distance = direction * movable.Velocity;
-            var futurePosition = movable.Position + distance;
-            movable.Position = futurePosition;
-            movable.Position += distance;*/
+            // Movement
+            movable.Position += movable.Speed;
 
-            if (m.Position.X > 800 - 48 || m.Position.X < 0) // bots x
-            {
-                m.Speed = new Vector2(m.Speed.X * -1, m.Speed.Y);
-                m.Acceleration = new Vector2(m.Acceleration.X * -1, m.Acceleration.Y);
-            }
-            if(m.Position.Y > 480 - 48 || m.Position.Y < 0) // bots y
-            {
-                m.Speed = new Vector2(m.Speed.X, m.Speed.Y * -1);
-                m.Acceleration = new Vector2(m.Acceleration.X, m.Acceleration.Y * -1);
-            }
-        }
+            // Horizontal movement (Left, Right, Stand stil)
+            if (input == Keys.Right) movable.Speed = new Vector2(movable.MaxSpeed, movable.Speed.Y);
+            else if (input == Keys.Left) movable.Speed = new Vector2(-movable.MaxSpeed, movable.Speed.Y);
+            else movable.Speed = new Vector2(0, movable.Speed.Y);
 
-        private Vector2 Limit(Vector2 v, float max)
-        {
-            if (v.Length() > max)
-            {
-                var ratio = max / v.Length();
-                v.X *= ratio;
-                v.Y *= ratio;
-            }
-            return v;
+            // Falling Logic
+            if (!movable.OnGround()) movable.Speed += new Vector2(0, 1);
+            else movable.Speed = new Vector2(movable.Speed.X, 0);
+
+            // Add inbound check
         }
     }
 }

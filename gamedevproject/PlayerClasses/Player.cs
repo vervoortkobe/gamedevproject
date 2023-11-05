@@ -1,6 +1,7 @@
 ﻿using gamedevproject.AnimationClasses;
 using gamedevproject.Interfaces;
 using gamedevproject.MovementClasses;
+using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,32 +16,30 @@ namespace gamedevproject.PlayerClasses
     internal class Player : IMovable, IGameObject
     {
         public Animation animation;
+        
+        Texture2D playerTexture;
+        
         public Vector2 Position { get; set; }
         public Vector2 Speed { get; set; }
-        public Vector2 Acceleration { get; set; }
         public float MaxSpeed { get; set; } = 10;
-        Texture2D playerTexture;
+        public MovementManager MovementManager { get; set; }
+        public StateManager StateManager { get; set; }
         public IInputReader InputReader { get; set; }
-        private MovementManager movementManager = new MovementManager();
-
 
         public Player(Texture2D texture, IInputReader inputReader)
         {
             playerTexture = texture;
             InputReader = inputReader;
-
             animation = new Animation();
-            animation.GetFramesFromTexture(texture.Width, texture.Height, 10, 1);
+            MovementManager = new MovementManager();
+            StateManager = new StateManager(this);
 
-            Position = new Vector2(1, 1);
-            Speed = new Vector2(2, 2);
-            Acceleration = new Vector2(0.1f, 0.1f);
+            Position = new Vector2(0, 480-48);
+            Speed = new Vector2(0, 0);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //scale x2
-            //spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0, Vector2.Zero, 3, SpriteEffects.None, 0);
             spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White);
         }
 
@@ -52,7 +51,13 @@ namespace gamedevproject.PlayerClasses
 
         private void Move()
         {
-            movementManager.Move(this);
+            MovementManager.Move(this);
+        }
+
+        public bool OnGround()
+        {
+            // returns false if the Y position of the movable is greater than the bottom of the game - the height of the movable
+            return Position.Y >= 480 - 48;
         }
     }
 }

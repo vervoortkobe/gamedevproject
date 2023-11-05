@@ -1,0 +1,38 @@
+﻿using gamedevproject.PlayerClasses;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace gamedevproject.States
+{
+    internal class JumpingState : State
+    {
+        public JumpingState(Player player) : base(player)
+        {
+        }
+
+        public override void Enter()
+        {
+            if (player.OnGround())
+            {
+                player.Speed -= new Vector2(0, 25);
+            }
+
+            player.animation.maxFrames = 3;
+            player.animation.frameY = 1;
+            player.animation.GetFrames(48, 48);
+        }
+
+        public override void HandleInput(Keys input)
+        {
+            if (player.Speed.Y > 1)
+            {
+                player.StateManager.SetState(PlayerStates.RUNNING);
+            }
+        }
+    }
+}

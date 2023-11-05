@@ -38,7 +38,7 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _texture = Content.Load<Texture2D>("player-idle-48x48");
+            _texture = Content.Load<Texture2D>("playerSheet");
             //_texture = Content.Load<Texture2D>("CharacterSheet");
 
             InitializeGameObjects();

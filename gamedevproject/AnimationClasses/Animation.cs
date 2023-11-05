@@ -12,6 +12,10 @@ namespace gamedevproject.AnimationClasses
     {
         public AnimationFrame CurrentFrame { get; set; }
 
+        public int maxFrames;
+
+        public int frameY;
+
         private List<AnimationFrame> frames;
 
         private int counter;
@@ -42,17 +46,14 @@ namespace gamedevproject.AnimationClasses
             }
         }
 
-        public void GetFramesFromTexture(int width,int height, int numberOfWidthSprites, int numberOfHeightSprites)
+        public void GetFrames(int widthSprite, int heightSprite)
         {
-            int frameWidth = width / numberOfWidthSprites;
-            int frameHeight = height / numberOfHeightSprites;
+            counter = 0;
+            frames.Clear();
 
-            for (int y = 0; y <= height - frameHeight; y += frameHeight)
+            for (int x = 0; x < widthSprite * maxFrames; x += widthSprite)
             {
-                for (int x = 0; x <= width - frameWidth; x += frameWidth)
-                {
-                    frames.Add(new AnimationFrame(new Rectangle(x, y, frameWidth, frameHeight)));
-                }
+                frames.Add(new AnimationFrame(new Rectangle(x, heightSprite * frameY, widthSprite, heightSprite)));
             }
         }
     }

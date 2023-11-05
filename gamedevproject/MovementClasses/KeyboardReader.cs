@@ -11,13 +11,28 @@ namespace gamedevproject.InputClasses
 {
     class KeyboardReader : IInputReader
     {
-        public Vector2 ReadInput()
+        public Keys ReadInput()
         {
+            var input = Keys.None;
             KeyboardState state = Keyboard.GetState();
-            Vector2 direction = Vector2.Zero;
-            if(state.IsKeyDown(Keys.Left)) direction.X -= 1;
-            if(state.IsKeyDown(Keys.Right)) direction.X += 1;
-            return direction;
+            if (state.IsKeyDown(Keys.Left))
+            {
+                input = Keys.Left;
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                input = Keys.Right;
+            }
+            if (state.IsKeyDown(Keys.Up))
+            {
+                input = Keys.Up;
+            }
+            if (state.IsKeyDown(Keys.Down))
+            {
+                input = Keys.Down;
+            }
+
+            return input;
         }
     }
 
