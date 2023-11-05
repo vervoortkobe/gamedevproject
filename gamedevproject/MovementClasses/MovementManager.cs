@@ -1,6 +1,7 @@
 ﻿using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace gamedevproject.MovementClasses
 {
@@ -16,8 +17,17 @@ namespace gamedevproject.MovementClasses
             movable.Position += movable.Speed;
 
             // Horizontal movement (Left, Right, Stand stil)
-            if (input == Keys.Right) movable.Speed = new Vector2(movable.MaxSpeed, movable.Speed.Y);
-            else if (input == Keys.Left) movable.Speed = new Vector2(-movable.MaxSpeed, movable.Speed.Y);
+            if (input == Keys.Right)
+            {
+                movable.Speed = new Vector2(movable.MaxSpeed, movable.Speed.Y);
+                movable.SpriteEffects = SpriteEffects.None;
+            }
+
+            else if (input == Keys.Left)
+            {
+                movable.Speed = new Vector2(-movable.MaxSpeed, movable.Speed.Y);
+                movable.SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
             else movable.Speed = new Vector2(0, movable.Speed.Y);
 
             // Falling Logic

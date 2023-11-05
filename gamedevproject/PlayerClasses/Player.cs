@@ -21,10 +21,12 @@ namespace gamedevproject.PlayerClasses
         
         public Vector2 Position { get; set; }
         public Vector2 Speed { get; set; }
-        public float MaxSpeed { get; set; } = 10;
+        public float MaxSpeed { get; set; }
+        public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
         public IInputReader InputReader { get; set; }
+
 
         public Player(Texture2D texture, IInputReader inputReader)
         {
@@ -35,12 +37,13 @@ namespace gamedevproject.PlayerClasses
             StateManager = new StateManager(this);
 
             Position = new Vector2(0, 480-48);
-            Speed = new Vector2(0, 0);
+            Speed = new Vector2(0,0);
+            MaxSpeed = 5;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White);
+            spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0,0), new Vector2(1, 1), this.SpriteEffects, 0f);
         }
 
         public void Update(GameTime gameTime)

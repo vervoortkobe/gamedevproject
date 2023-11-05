@@ -19,7 +19,7 @@ namespace gamedevproject.States
         {
             if (player.OnGround())
             {
-                player.Speed -= new Vector2(0, 25);
+                player.Speed -= new Vector2(0, 15);
             }
 
             player.animation.maxFrames = 3;
@@ -29,9 +29,9 @@ namespace gamedevproject.States
 
         public override void HandleInput(Keys input)
         {
-            if (player.Speed.Y > 1)
+            if (player.OnGround())
             {
-                player.StateManager.SetState(PlayerStates.RUNNING);
+                player.StateManager.SetState(PlayerStates.IDLE);
             }
         }
     }
