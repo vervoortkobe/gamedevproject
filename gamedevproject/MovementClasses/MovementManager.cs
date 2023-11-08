@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace gamedevproject.MovementClasses
 {
@@ -9,32 +10,58 @@ namespace gamedevproject.MovementClasses
     {
         public void Move(IMovable movable)
         {
+            //Todo: Add gravity to player class or maybe game class?
+
+            Vector2 gravity = new Vector2(0, 0.4f);
+
             var input = movable.InputReader.ReadInput();
 
             movable.StateManager.CurrentState.HandleInput(input);
 
-            // Movement
-            movable.Position += movable.Speed;
+            movable.Position += movable.Direction * movable.Speed;
 
-            // Horizontal movement (Left, Right, Stand stil)
+            if (input == Keys.None)
+            {
+                movable.Direction = new Vector2(0, movable.Direction.Y);
+            }
+
             if (input == Keys.Right)
             {
-                movable.Speed = new Vector2(movable.MaxSpeed, movable.Speed.Y);
                 movable.SpriteEffects = SpriteEffects.None;
+                movable.Direction = new Vector2(1, movable.Direction.Y);
             }
 
-            else if (input == Keys.Left)
+            if (input == Keys.Left)
             {
-                movable.Speed = new Vector2(-movable.MaxSpeed, movable.Speed.Y);
                 movable.SpriteEffects = SpriteEffects.FlipHorizontally;
+                movable.Direction = new Vector2(-1, movable.Direction.Y);
             }
-            else movable.Speed = new Vector2(0, movable.Speed.Y);
+            
+            // Jumping Logic
+
+            if(input == Keys.Space && movable.OnGround())
+            {
+                movable.Direction = new Vector2(movable.Direction.X, -5);
+            }
 
             // Falling Logic
-            if (!movable.OnGround()) movable.Speed += new Vector2(0, 1);
-            else movable.Speed = new Vector2(movable.Speed.X, 0);
+            // Todo: Change OnGround() to IsJumping()?
 
-            // Add inbound check
+            else if (!movable.OnGround())
+            {
+                movable.Direction += gravity;
+            }
+
+            // Todo: Change to collision with ground or groundObject
+
+            else if(movable.Position.Y >= 480 - 48)
+            {
+                movable.Direction = new Vector2(movable.Direction.X, 0);
+            }
+
+            
+
+            // Todo: Add inbound check
         }
     }
 }

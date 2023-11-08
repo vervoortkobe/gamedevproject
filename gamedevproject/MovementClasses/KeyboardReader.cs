@@ -31,6 +31,10 @@ namespace gamedevproject.InputClasses
             {
                 input = Keys.Down;
             }
+            if (state.IsKeyDown(Keys.Space)) 
+            {
+                input = Keys.Space;
+            }
 
             return input;
         }

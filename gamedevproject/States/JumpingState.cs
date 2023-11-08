@@ -17,11 +17,6 @@ namespace gamedevproject.States
 
         public override void Enter()
         {
-            if (player.OnGround())
-            {
-                player.Speed -= new Vector2(0, 15);
-            }
-
             player.animation.maxFrames = 3;
             player.animation.frameY = 1;
             player.animation.GetFrames(48, 48);

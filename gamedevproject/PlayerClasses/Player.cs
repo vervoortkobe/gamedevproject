@@ -20,8 +20,8 @@ namespace gamedevproject.PlayerClasses
         Texture2D playerTexture;
         
         public Vector2 Position { get; set; }
-        public Vector2 Speed { get; set; }
-        public float MaxSpeed { get; set; }
+        public Vector2 Direction { get; set; }
+        public float Speed { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
@@ -37,8 +37,8 @@ namespace gamedevproject.PlayerClasses
             StateManager = new StateManager(this);
 
             Position = new Vector2(0, 480-48);
-            Speed = new Vector2(0,0);
-            MaxSpeed = 5;
+            Direction = Vector2.Zero;
+            Speed = 5;
         }
 
         public void Draw(SpriteBatch spriteBatch)

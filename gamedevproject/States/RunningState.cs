@@ -19,7 +19,7 @@ namespace gamedevproject.States
 
         public override void HandleInput(Keys input)
         {
-            if (input == Keys.Up)
+            if (input == Keys.Space)
             {
                 player.StateManager.SetState(PlayerStates.JUMPING);
             }
