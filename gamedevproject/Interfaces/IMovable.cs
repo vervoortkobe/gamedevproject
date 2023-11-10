@@ -19,6 +19,8 @@ namespace gamedevproject.Interfaces
         public IInputReader InputReader { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
+        public bool IsJumping { get; set; }
+        public int JumpHeight { get; set; }
         public bool OnGround();
     }
 }

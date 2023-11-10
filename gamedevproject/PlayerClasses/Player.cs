@@ -18,32 +18,38 @@ namespace gamedevproject.PlayerClasses
         public Animation animation;
         
         Texture2D playerTexture;
+
+        Game _game;
         
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
         public float Speed { get; set; }
+        public bool IsJumping { get; set; }
+        public int JumpHeight { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
         public IInputReader InputReader { get; set; }
 
-
-        public Player(Texture2D texture, IInputReader inputReader)
+        public Player(Texture2D texture, IInputReader inputReader, Game game)
         {
+            _game = game;
             playerTexture = texture;
             InputReader = inputReader;
             animation = new Animation();
             MovementManager = new MovementManager();
             StateManager = new StateManager(this);
-
-            Position = new Vector2(0, 480-48);
+            IsJumping = false;
+            Position = new Vector2(0, game.GraphicsDevice.PresentationParameters.BackBufferHeight - 48);
             Direction = Vector2.Zero;
+            JumpHeight = 15;
             Speed = 5;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0,0), new Vector2(1, 1), this.SpriteEffects, 0f);
+          
         }
 
         public void Update(GameTime gameTime)
@@ -60,7 +66,7 @@ namespace gamedevproject.PlayerClasses
         public bool OnGround()
         {
             // returns false if the Y position of the movable is greater than the bottom of the game - the height of the movable
-            return Position.Y >= 480 - 48;
+            return Position.Y >= _game.GraphicsDevice.PresentationParameters.BackBufferHeight - 48;
         }
     }
 }

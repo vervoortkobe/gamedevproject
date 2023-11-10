@@ -4,6 +4,7 @@ using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Runtime.Versioning;
 
 namespace gamedevproject
 {
@@ -17,6 +18,9 @@ namespace gamedevproject
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -29,7 +33,7 @@ namespace gamedevproject
 
         private void InitializeGameObjects()
         {
-            player = new Player(_texture, new KeyboardReader());
+            player = new Player(_texture, new KeyboardReader(), this);
         }
 
         protected override void LoadContent()
@@ -39,7 +43,6 @@ namespace gamedevproject
             // TODO: use this.Content to load your game content here
 
             _texture = Content.Load<Texture2D>("playerSheet");
-            //_texture = Content.Load<Texture2D>("CharacterSheet");
 
             InitializeGameObjects();
         }
