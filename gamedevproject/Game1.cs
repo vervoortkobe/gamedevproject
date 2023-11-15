@@ -1,5 +1,6 @@
 ﻿using gamedevproject.AnimationClasses;
 using gamedevproject.InputClasses;
+using gamedevproject.MapClasses;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,8 @@ namespace gamedevproject
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private Player player;
+        Texture2D _tilesetTexture;
+        private Map map;
 
         public Game1()
         {
@@ -30,6 +33,7 @@ namespace gamedevproject
         private void InitializeGameObjects()
         {
             player = new Player(_texture, new KeyboardReader());
+            map = new Map(_tilesetTexture);
         }
 
         protected override void LoadContent()
@@ -41,6 +45,8 @@ namespace gamedevproject
             _texture = Content.Load<Texture2D>("playerSheet");
             //_texture = Content.Load<Texture2D>("CharacterSheet");
 
+            _tilesetTexture = Content.Load<Texture2D>("TextureSheet");
+
             InitializeGameObjects();
         }
 
@@ -51,11 +57,10 @@ namespace gamedevproject
                 Exit();
 
             // TODO: Add your update logic here
+            //map.Update(gameTime);
             player.Update(gameTime);
-
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -64,9 +69,9 @@ namespace gamedevproject
             // TODO: Add your drawing code here
 
             _spriteBatch.Begin();
+            map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
             _spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }
