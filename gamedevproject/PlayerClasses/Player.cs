@@ -23,9 +23,9 @@ namespace gamedevproject.PlayerClasses
         
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
-        public float Speed { get; set; }
-        public bool IsJumping { get; set; }
-        public int JumpHeight { get; set; }
+        public Rectangle Bounds { get; set; }
+        public Vector2 Speed { get; set; }
+        public bool IsOnGround { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
@@ -37,13 +37,18 @@ namespace gamedevproject.PlayerClasses
             playerTexture = texture;
             InputReader = inputReader;
             animation = new Animation();
+
+            //Managers
             MovementManager = new MovementManager();
             StateManager = new StateManager(this);
-            IsJumping = false;
-            Position = new Vector2(0, game.GraphicsDevice.PresentationParameters.BackBufferHeight - 48);
-            Direction = Vector2.Zero;
-            JumpHeight = 15;
-            Speed = 5;
+
+            IsOnGround = false;
+
+            Position = new Vector2(0, 720-200);
+            Direction = new Vector2(0,0);
+            Speed = new Vector2(3,0.8f);
+
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -56,17 +61,12 @@ namespace gamedevproject.PlayerClasses
         {
             Move();
             animation.Update(gameTime);
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
         }
 
         private void Move()
         {
             MovementManager.Move(this);
-        }
-
-        public bool OnGround()
-        {
-            // returns false if the Y position of the movable is greater than the bottom of the game - the height of the movable
-            return Position.Y >= _game.GraphicsDevice.PresentationParameters.BackBufferHeight - 48;
         }
     }
 }

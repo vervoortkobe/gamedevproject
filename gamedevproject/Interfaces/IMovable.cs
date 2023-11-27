@@ -14,13 +14,12 @@ namespace gamedevproject.Interfaces
     {
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
-        public float Speed { get; set; }
+        public Vector2 Speed { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public IInputReader InputReader { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
-        public bool IsJumping { get; set; }
-        public int JumpHeight { get; set; }
-        public bool OnGround();
+        public bool IsOnGround { get; set; }
+
     }
 }

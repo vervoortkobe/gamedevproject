@@ -9,6 +9,9 @@ namespace gamedevproject.MovementClasses
 {
     class MovementManager
     {
+
+        public Vector2 Gravity = new Vector2(0, 0.2f);
+
         public void Move(IMovable movable)
         {
             //Todo: Add gravity to player class or maybe game class?
@@ -35,30 +38,25 @@ namespace gamedevproject.MovementClasses
                 movable.SpriteEffects = SpriteEffects.FlipHorizontally;
                 movable.Direction = new Vector2(-1, movable.Direction.Y);
             }
-            
+
             // Y-axis Movement
 
-            if (movable.IsJumping)
+            if (input == Keys.Space && movable.IsOnGround)
             {
-                Vector2 gravity = new Vector2(0, 0.4f);
-                movable.Direction += gravity;
-                
-                // Todo: Change to collision with ground or groundObject
-                if (movable.Position.Y >= 720 - 48)
-                {
-                    movable.IsJumping = false;
-                    movable.Direction = new Vector2(movable.Direction.X, 0);
-                }
+                movable.IsOnGround = false;
+                movable.Direction = new Vector2(movable.Direction.X, -8);
             }
 
-            if (input == Keys.Space && !movable.IsJumping)
+            if (movable.IsOnGround)
             {
-                movable.Direction = new Vector2(movable.Direction.X, -4);
-                movable.IsJumping = true;
+                movable.Direction = new Vector2(movable.Direction.X, 0);
+            }
+            else
+            {
+                movable.Direction += Gravity;
             }
 
             movable.Position += movable.Direction * movable.Speed;
-            
         }
     }
 }
