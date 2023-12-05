@@ -10,7 +10,7 @@ namespace gamedevproject.MovementClasses
     class MovementManager
     {
 
-        public Vector2 Gravity = new Vector2(0, 0.2f);
+        public Vector2 Gravity = new Vector2(0, 0.5f);
 
         public void Move(IMovable movable)
         {
@@ -41,22 +41,15 @@ namespace gamedevproject.MovementClasses
 
             // Y-axis Movement
 
-            if (input == Keys.Space && movable.IsOnGround)
-            {
-                movable.IsOnGround = false;
-                movable.Direction = new Vector2(movable.Direction.X, -8);
-            }
-
-            if (movable.IsOnGround)
-            {
-                movable.Direction = new Vector2(movable.Direction.X, 0);
-            }
-            else
+            if (!movable.IsOnGround)
             {
                 movable.Direction += Gravity;
             }
 
-            movable.Position += movable.Direction * movable.Speed;
+            if (input == Keys.Space && movable.IsOnGround)
+            {
+                movable.Direction = new Vector2(movable.Direction.X, -10);
+            }
         }
     }
 }

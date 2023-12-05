@@ -21,7 +21,9 @@ namespace gamedevproject.PlayerClasses
 
         Game _game;
         
+        
         public Vector2 Position { get; set; }
+        public Vector2 NewPosition { get; set; }
         public Vector2 Direction { get; set; }
         public Rectangle Bounds { get; set; }
         public Vector2 Speed { get; set; }
@@ -43,10 +45,9 @@ namespace gamedevproject.PlayerClasses
             StateManager = new StateManager(this);
 
             IsOnGround = false;
-
-            Position = new Vector2(0, 720-200);
+            Position = new Vector2(30, 720-200);
             Direction = new Vector2(0,0);
-            Speed = new Vector2(3,0.8f);
+            Speed = new Vector2(3,1);
 
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
         }
@@ -54,14 +55,13 @@ namespace gamedevproject.PlayerClasses
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(playerTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0,0), new Vector2(1, 1), this.SpriteEffects, 0f);
-          
         }
 
         public void Update(GameTime gameTime)
         {
             Move();
-            animation.Update(gameTime);
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
+            animation.Update(gameTime);
         }
 
         private void Move()

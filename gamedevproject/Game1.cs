@@ -1,4 +1,5 @@
 ﻿using gamedevproject.AnimationClasses;
+using gamedevproject.HelperClasses;
 using gamedevproject.InputClasses;
 using gamedevproject.Interfaces;
 using gamedevproject.LevelObjects;
@@ -15,11 +16,15 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        // Textures:
         private Texture2D _texture;
         private Texture2D _blockTexture;
         private Texture2D _background;
+        // Game Obj:
         private Player player;
-        private List<Block> blocks;
+        private List<IGameObject> blocks;
+        // Other Classes:
+        private Collider collider;
 
         public Game1()
         {
@@ -40,25 +45,18 @@ namespace gamedevproject
         private void InitializeGameObjects()
         {
             player = new Player(_texture, new KeyboardReader(), this);
-            blocks = new List<Block>();
+            blocks = new List<IGameObject>();
+            collider = new Collider();
+
             for (int i = 0; i < 20; i++)
             {
-                blocks.Add(new Block(_blockTexture, i * 64, 720 - 64, 64, 36));
+                blocks.Add(new Block(_blockTexture, i * 64, 720 - 36, 64, 36));
             }
-            for (int i = 2; i < 20; i++)
-            {
-                if (i % 4 == 0)
-                {
-                    blocks.Add(new Block(_blockTexture, i * 64, 720 - 192, 64, 36));
-                }
-            }
-            for (int i = 2; i < 20; i++)
-            {
-                if (i % 5 == 0)
-                {
-                    blocks.Add(new Block(_blockTexture, i * 64, 720 - 320, 64, 36));
-                }
-            }
+
+            blocks.Add(new Block(_blockTexture, 128, 720 - 128, 64, 36));
+            blocks.Add(new Block(_blockTexture, 256, 720 - 164, 64, 36));
+            blocks.Add(new Block(_blockTexture, 392, 720 - 254, 64, 36));
+            blocks.Add(new Block(_blockTexture, 512, 720 - 324, 64, 36));
         }
 
         protected override void LoadContent()
@@ -79,22 +77,13 @@ namespace gamedevproject
             if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) 
                 Exit();
-
-            // TODO: Add your update logic here
-                    
-            player.IsOnGround = false;
             
-            foreach (Block block in blocks)
-            {
-                if (player.Bounds.Intersects(block.Bounds))
-                {
-                    player.IsOnGround = true;
-                }
-            }
+            base.Update(gameTime);
 
             player.Update(gameTime);
-
-            base.Update(gameTime);
+            
+            collider.CheckGroundCollision(player, blocks);
+            
         }
 
 
@@ -112,7 +101,7 @@ namespace gamedevproject
             foreach(Block block in blocks)
             {
                 block.Draw(_spriteBatch);
-                _spriteBatch.Draw(border, block.Bounds, Color.Green);
+                //_spriteBatch.Draw(border, block.Bounds, Color.Green);
             }
           
             // Draw player
