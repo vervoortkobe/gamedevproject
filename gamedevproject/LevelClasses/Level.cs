@@ -46,7 +46,7 @@ namespace gamedevproject.LevelClasses
             switch (tileType)
             {
                 case '.':
-                    return new LevelTile();
+                    return new LevelTile(null, TileCollision.Passable);
                 default:
                     throw new NotSupportedException("Tile is not supported.");
             }

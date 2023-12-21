@@ -57,7 +57,7 @@ namespace gamedevproject
                 Exit();
             }
 
-            //Level.Update()
+            //Level.Update(gameTime)
             
             base.Update(gameTime);
         }
@@ -70,6 +70,8 @@ namespace gamedevproject
             _spriteBatch.Begin();
 
             // Level.Draw()
+
+            // DrawHUD()
 
             _spriteBatch.End();
 
