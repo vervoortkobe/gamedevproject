@@ -21,9 +21,9 @@ namespace gamedevproject
         {
             _graphics = new GraphicsDeviceManager(this);
 
-            //Game Dimensions:
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            //Screen Dimensions:
+            _graphics.PreferredBackBufferWidth = 960;
+            _graphics.PreferredBackBufferHeight = 960;
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -32,13 +32,10 @@ namespace gamedevproject
 
         protected override void Initialize()
         {
+            // ONDERZOEKEN WAT DIT DOET ?!
+
             // TODO: Add your initialization logic here
             base.Initialize();
-        }
-
-        private void InitializeGameObjects()
-        {
-            
         }
 
         protected override void LoadContent()
@@ -47,20 +44,20 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _texture = Content.Load<Texture2D>("playerSheet");
-            _blockTexture = Content.Load<Texture2D>("block-texture2");
-            _background = Content.Load<Texture2D>("background1");
-
-            InitializeGameObjects();
+            //LoadNextLevel();
         }
 
         protected override void Update(GameTime gameTime)
         {
             //Add GameButtons for Pausing / Exit / Restart Level
 
-            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
-                Keyboard.GetState().IsKeyDown(Keys.Escape)) 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
+
+            //Level.Update()
             
             base.Update(gameTime);
         }
