@@ -21,7 +21,6 @@ namespace gamedevproject.PlayerClasses
 
         Game _game;
         
-        
         public Vector2 Position { get; set; }
         public Vector2 NewPosition { get; set; }
         public Vector2 Direction { get; set; }

@@ -22,6 +22,7 @@ namespace gamedevproject
         private Texture2D _background;
         // Game Obj:
         private Player player;
+        private Enemy enemy1;
         private List<IGameObject> blocks;
         // Other Classes:
         private Collider collider;
@@ -45,6 +46,9 @@ namespace gamedevproject
         private void InitializeGameObjects()
         {
             player = new Player(_texture, new KeyboardReader(), this);
+            Texture2D enemyTexture = new Texture2D(GraphicsDevice, 1, 1);
+            enemyTexture.SetData(new Color[] { Color.Red });
+            enemy1 = new Enemy(enemyTexture, player);
             blocks = new List<IGameObject>();
             collider = new Collider();
 
@@ -53,10 +57,15 @@ namespace gamedevproject
                 blocks.Add(new Block(_blockTexture, i * 64, 720 - 36, 64, 36));
             }
 
-            blocks.Add(new Block(_blockTexture, 128, 720 - 128, 64, 36));
-            blocks.Add(new Block(_blockTexture, 256, 720 - 164, 64, 36));
-            blocks.Add(new Block(_blockTexture, 392, 720 - 254, 64, 36));
-            blocks.Add(new Block(_blockTexture, 512, 720 - 324, 64, 36));
+            blocks.Add(new Block(_blockTexture, 125, 720 - 140, 64, 36));
+            blocks.Add(new Block(_blockTexture, 250, 720 - 190, 64, 36));
+            blocks.Add(new Block(_blockTexture, 375, 720 - 240, 64, 36));
+            blocks.Add(new Block(_blockTexture, 500, 720 - 315, 64, 36));
+            blocks.Add(new Block(_blockTexture, 564, 720 - 315, 64, 36));
+            blocks.Add(new Block(_blockTexture, 725, 720 - 254, 64, 36));
+            blocks.Add(new Block(_blockTexture, 789, 720 - 254, 64, 36));
+            blocks.Add(new Block(_blockTexture, 980, 720 - 240, 64, 36));
+            blocks.Add(new Block(_blockTexture, 1044, 720 - 240, 64, 36));
         }
 
         protected override void LoadContent()
@@ -81,6 +90,8 @@ namespace gamedevproject
             base.Update(gameTime);
 
             player.Update(gameTime);
+
+            enemy1.Update(gameTime);
             
             collider.CheckGroundCollision(player, blocks);
             
@@ -94,20 +105,20 @@ namespace gamedevproject
             _spriteBatch.Begin();
             _spriteBatch.Draw(_background, new Rectangle(0, 0, 1280, 720),Color.White);
 
-            Texture2D border = new Texture2D(GraphicsDevice, 1, 1);
-            border.SetData(new Color[] { Color.Red });
-
             // Draw blocks
             foreach(Block block in blocks)
             {
                 block.Draw(_spriteBatch);
-                //_spriteBatch.Draw(border, block.Bounds, Color.Green);
             }
-          
-            // Draw player
+
+            Texture2D border = new Texture2D(GraphicsDevice, 1, 1);
+            border.SetData(new Color[] { Color.Red });
             _spriteBatch.Draw(border, player.Bounds, Color.Red);
+
             player.Draw(_spriteBatch);
-            
+
+            enemy1.Draw(_spriteBatch);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

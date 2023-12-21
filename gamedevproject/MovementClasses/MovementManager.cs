@@ -50,6 +50,8 @@ namespace gamedevproject.MovementClasses
             {
                 movable.Direction = new Vector2(movable.Direction.X, -10);
             }
+
+            movable.Direction.Normalize();
         }
     }
 }
