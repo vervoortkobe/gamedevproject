@@ -80,7 +80,7 @@ namespace gamedevproject.LevelClasses
                 case '1':
                     return LoadStartTile(x, y);
                 case '#':
-                    return LoadSpecificTile("Ground", 7, TileCollision.Impassable);
+                    return LoadSpecificTile("Block1", 7, TileCollision.Impassable);
                 default:
                     throw new NotSupportedException("Tile is not supported and / or implemented");
             }
@@ -102,7 +102,7 @@ namespace gamedevproject.LevelClasses
 
         private LevelTile LoadTileFromContent(string name, TileCollision collision)
         {
-            return new LevelTile(Content.Load<Texture2D>("Tiles/" + name), collision);
+            return new LevelTile(Content.Load<Texture2D>("Sprites/" + name), collision);
         }
 
         private LevelTile LoadSpecificTile(string baseName, int variationCount, TileCollision collision)
@@ -147,5 +147,37 @@ namespace gamedevproject.LevelClasses
         }
 
         #endregion
+
+        public void Update(GameTime gameTime)
+        {
+            player.Update(gameTime);
+        }
+
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            DrawTiles(spriteBatch);
+
+            player.Draw(spriteBatch);
+        }
+
+        private void DrawTiles(SpriteBatch spriteBatch)
+        {
+            // For each tile position
+            for (int y = 0; y < Height; ++y)
+            {
+                for (int x = 0; x < Width; ++x)
+                {
+                    // If there is a visible tile in that position
+                    Texture2D texture = tiles[x, y].Texture;
+                    if (texture != null)
+                    {
+                        // Draw it in screen space.
+                        Vector2 position = new Vector2(x, y) * LevelTile.Size;
+                        spriteBatch.Draw(texture, position, Color.White);
+                    }
+                }
+            }
+        }
+
     }
 }

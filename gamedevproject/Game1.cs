@@ -2,12 +2,14 @@
 using gamedevproject.HelperClasses;
 using gamedevproject.InputClasses;
 using gamedevproject.Interfaces;
+using gamedevproject.LevelClasses;
 using gamedevproject.LevelObjects;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Versioning;
 
 namespace gamedevproject
@@ -16,6 +18,8 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private Level _level;
 
         public Game1()
         {
@@ -44,7 +48,9 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            //LoadNextLevel();
+            string levelPath = string.Format("Content/Levels/Level{0}.txt", 1);
+            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
+                _level = new Level(Services, fileStream, 1);
         }
 
         protected override void Update(GameTime gameTime)
@@ -57,7 +63,7 @@ namespace gamedevproject
                 Exit();
             }
 
-            //Level.Update(gameTime)
+            _level.Update(gameTime);
             
             base.Update(gameTime);
         }
@@ -69,7 +75,7 @@ namespace gamedevproject
 
             _spriteBatch.Begin();
 
-            // Level.Draw()
+            _level.Draw(gameTime,_spriteBatch);
 
             // DrawHUD()
 
