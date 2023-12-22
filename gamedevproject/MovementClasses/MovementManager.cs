@@ -20,6 +20,8 @@ namespace gamedevproject.MovementClasses
 
             movable.StateManager.CurrentState.HandleInput(input);
 
+            Vector2 prevPosition = movable.Position;
+
             // X-axis Movement
 
             if (input == Keys.None)
@@ -38,6 +40,8 @@ namespace gamedevproject.MovementClasses
                 movable.SpriteEffects = SpriteEffects.FlipHorizontally;
                 movable.Direction = new Vector2(-1, movable.Direction.Y);
             }
+
+            movable.Position += movable.Direction;
 
             // Y-axis Movement
 
