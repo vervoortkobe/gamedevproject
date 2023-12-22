@@ -1,11 +1,11 @@
 ﻿using gamedevproject.PlayerClasses;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct2D1.Effects;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,11 +18,14 @@ namespace gamedevproject.LevelClasses
         #region Properties
 
         private LevelTile[,] tiles;
-        private Texture2D[] layer;
+        private Texture2D[] layers;
         private const int EntityLayer = 2;
 
         public Player Player { get { return player; } }
         private Player player;
+
+        //Starting point, defined in LoadStartingTile()
+        private Vector2 start;
 
         public ContentManager Content { get { return content; } }
         private ContentManager content;
@@ -40,7 +43,6 @@ namespace gamedevproject.LevelClasses
 
         private void LoadTiles(Stream fileStream)
         {
-            // Load the level and ensure all of the lines are the same length.
             int width;
             List<string> lines = new List<string>();
 
@@ -57,15 +59,12 @@ namespace gamedevproject.LevelClasses
                 }
             }
 
-            // Allocate the tile grid.
             tiles = new LevelTile[width, lines.Count];
 
-            // Loop over every tile position,
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    // to load each tile.
                     char tileType = lines[y][x];
                     tiles[x, y] = LoadTile(tileType, x, y);
                 }
@@ -78,9 +77,37 @@ namespace gamedevproject.LevelClasses
             {
                 case '.':
                     return new LevelTile(null, TileCollision.Passable);
+                case '1':
+                    return LoadStartTile(x, y);
+                case '#':
+                    return LoadSpecificTile("Ground", 7, TileCollision.Impassable);
                 default:
                     throw new NotSupportedException("Tile is not supported and / or implemented");
             }
+        }
+
+        private LevelTile LoadStartTile(int x, int y)
+        {
+            if (Player != null)
+                throw new NotSupportedException("A level may only have one starting point.");
+
+            Rectangle rect = GetBounds(x, y);
+
+            start = new Vector2(rect.X + rect.Width / 2.0f, rect.Bottom);
+
+            player = new Player(this, start);
+
+            return new LevelTile(null, TileCollision.Passable);
+        }
+
+        private LevelTile LoadTileFromContent(string name, TileCollision collision)
+        {
+            return new LevelTile(Content.Load<Texture2D>("Tiles/" + name), collision);
+        }
+
+        private LevelTile LoadSpecificTile(string baseName, int variationCount, TileCollision collision)
+        {
+            return LoadTileFromContent(baseName, collision);
         }
 
         public void Dispose()
@@ -92,12 +119,6 @@ namespace gamedevproject.LevelClasses
 
         #region Bounds and collision
 
-        /// <summary>
-        /// Gets the collision mode of the tile at a particular location.
-        /// This method handles tiles outside of the levels boundries by making it
-        /// impossible to escape past the left or right edges, but allowing things
-        /// to jump beyond the top of the level and fall off the bottom.
-        /// </summary>
         public TileCollision GetCollision(int x, int y)
         {
             // Prevent escaping past the level ends.
@@ -109,26 +130,17 @@ namespace gamedevproject.LevelClasses
 
             return tiles[x, y].Collision;
         }
-
-        /// <summary>
-        /// Gets the bounding rectangle of a tile in world space.
-        /// </summary>        
+     
         public Rectangle GetBounds(int x, int y)
         {
             return new Rectangle(x * LevelTile.Width, y * LevelTile.Height, LevelTile.Width, LevelTile.Height);
         }
 
-        /// <summary>
-        /// Width of level measured in tiles.
-        /// </summary>
         public int Width
         {
             get { return tiles.GetLength(0); }
         }
 
-        /// <summary>
-        /// Height of the level measured in tiles.
-        /// </summary>
         public int Height
         {
             get { return tiles.GetLength(1); }
