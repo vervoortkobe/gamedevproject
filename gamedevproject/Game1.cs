@@ -1,10 +1,16 @@
 ﻿using gamedevproject.AnimationClasses;
+using gamedevproject.HelperClasses;
 using gamedevproject.InputClasses;
-using gamedevproject.MapClasses;
+using gamedevproject.Interfaces;
+using gamedevproject.LevelClasses;
+using gamedevproject.LevelObjects;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Versioning;
 
 namespace gamedevproject
 {
@@ -12,28 +18,28 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Texture2D _texture;
-        private Player player;
-        Texture2D _tilesetTexture;
-        private Map map;
+
+        private Level _level;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+
+            //Screen Dimensions:
+            _graphics.PreferredBackBufferWidth = 960;
+            _graphics.PreferredBackBufferHeight = 960;
+            _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+            // ONDERZOEKEN WAT DIT DOET ?!
+
             // TODO: Add your initialization logic here
             base.Initialize();
-        }
-
-        private void InitializeGameObjects()
-        {
-            player = new Player(_texture, new KeyboardReader());
-            map = new Map(_tilesetTexture);
         }
 
         protected override void LoadContent()
@@ -42,36 +48,39 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _texture = Content.Load<Texture2D>("playerSheet");
-            //_texture = Content.Load<Texture2D>("CharacterSheet");
-
-            _tilesetTexture = Content.Load<Texture2D>("TextureSheet");
-
-            InitializeGameObjects();
+            string levelPath = string.Format("Content/Levels/Level{0}.txt", 1);
+            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
+                _level = new Level(Services, fileStream, 1);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
-                Keyboard.GetState().IsKeyDown(Keys.Escape)) 
-                Exit();
+            //Add GameButtons for Pausing / Exit / Restart Level
 
-            // TODO: Add your update logic here
-            //map.Update(gameTime);
-            player.Update(gameTime);
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
+            _level.Update(gameTime);
+            
             base.Update(gameTime);
         }
+
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
 
-            // TODO: Add your drawing code here
-
             _spriteBatch.Begin();
-            map.Draw(_spriteBatch);
-            player.Draw(_spriteBatch);
+
+            _level.Draw(gameTime,_spriteBatch);
+
+            // DrawHUD()
+
             _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

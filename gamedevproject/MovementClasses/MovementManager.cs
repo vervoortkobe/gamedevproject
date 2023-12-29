@@ -3,22 +3,26 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using SharpDX.MediaFoundation;
 
 namespace gamedevproject.MovementClasses
 {
     class MovementManager
     {
+
+        public Vector2 Gravity = new Vector2(0, 0.5f);
+
         public void Move(IMovable movable)
         {
             //Todo: Add gravity to player class or maybe game class?
-
-            Vector2 gravity = new Vector2(0, 0.4f);
 
             var input = movable.InputReader.ReadInput();
 
             movable.StateManager.CurrentState.HandleInput(input);
 
-            movable.Position += movable.Direction * movable.Speed;
+            Vector2 prevPosition = movable.Position;
+
+            // X-axis Movement
 
             if (input == Keys.None)
             {
@@ -36,32 +40,22 @@ namespace gamedevproject.MovementClasses
                 movable.SpriteEffects = SpriteEffects.FlipHorizontally;
                 movable.Direction = new Vector2(-1, movable.Direction.Y);
             }
-            
-            // Jumping Logic
 
-            if(input == Keys.Space && movable.OnGround())
+            movable.Position += movable.Direction;
+
+            // Y-axis Movement
+
+            if (!movable.IsOnGround)
             {
-                movable.Direction = new Vector2(movable.Direction.X, -5);
+                movable.Direction += Gravity;
             }
 
-            // Falling Logic
-            // Todo: Change OnGround() to IsJumping()?
-
-            else if (!movable.OnGround())
+            if (input == Keys.Space && movable.IsOnGround)
             {
-                movable.Direction += gravity;
+                movable.Direction = new Vector2(movable.Direction.X, -10);
             }
 
-            // Todo: Change to collision with ground or groundObject
-
-            else if(movable.Position.Y >= 480 - 48)
-            {
-                movable.Direction = new Vector2(movable.Direction.X, 0);
-            }
-
-            
-
-            // Todo: Add inbound check
+            movable.Direction.Normalize();
         }
     }
 }
