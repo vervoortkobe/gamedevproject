@@ -1,4 +1,5 @@
 ﻿using gamedevproject.AnimationClasses;
+using gamedevproject.GameStateClasses;
 using gamedevproject.HelperClasses;
 using gamedevproject.InputClasses;
 using gamedevproject.Interfaces;
@@ -8,7 +9,9 @@ using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.MediaFoundation;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Runtime.Versioning;
 
@@ -20,6 +23,8 @@ namespace gamedevproject
         private SpriteBatch _spriteBatch;
 
         private Level _level;
+        private GameState _gamestate;
+        private GameStateManager _gsman;
 
         public Game1()
         {
@@ -48,6 +53,10 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
+            _gsman = new GameStateManager(_gamestate);
+            _gamestate = new GameState();
+
+            _gamestate.GameStateValue = GameStates.STARTSCREEN;
             string levelPath = string.Format("Content/Levels/Level{0}.txt", 1);
             using (Stream fileStream = TitleContainer.OpenStream(levelPath))
                 _level = new Level(Services, fileStream, 1);
@@ -56,18 +65,24 @@ namespace gamedevproject
         protected override void Update(GameTime gameTime)
         {
             //Add GameButtons for Pausing / Exit / Restart Level
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.R))
             {
-                Exit();
+                // Restart();
             }
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                // Pause();
+            }
+            else Exit();
 
             _level.Update(gameTime);
             
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -75,7 +90,7 @@ namespace gamedevproject
 
             _spriteBatch.Begin();
 
-            _level.Draw(gameTime,_spriteBatch);
+            _level.Draw(gameTime, _spriteBatch);
 
             // DrawHUD()
 
