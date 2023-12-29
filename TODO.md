@@ -8,6 +8,7 @@
 - Kobe:
   - Sprites Background + Enemies
   - Enemy movement / attack
+  - GameState & Manager
 - Thomas:
   - Player movement
   - Player: OnGround(), IsJumping(), InBoundsCheck
