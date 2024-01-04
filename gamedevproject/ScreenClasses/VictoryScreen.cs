@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using gamedevproject.Interfaces;
 
 namespace gamedevproject.ScreenClasses
 {
-    internal class VictoryScreen: Screen
+    internal class VictoryScreen: IScreen
     {
     }
 }

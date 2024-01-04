@@ -1,9 +1,7 @@
 ﻿using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using SharpDX.MediaFoundation;
+using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.MovementClasses
 {
