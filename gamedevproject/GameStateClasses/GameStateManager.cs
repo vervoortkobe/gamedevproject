@@ -14,7 +14,7 @@ namespace gamedevproject.GameStateClasses
 
     internal class GameStateManager
     {
-        private IGameState gameState { get; set; }
+        private GameState gameState { get; set; }
         private Level _level;
         private readonly IServiceProvider Services;
 
@@ -23,7 +23,7 @@ namespace gamedevproject.GameStateClasses
             return;
         }
 
-        public GameStateManager(IGameState gameState)
+        public GameStateManager(GameState gameState)
         {
             this.gameState = gameState;
         }

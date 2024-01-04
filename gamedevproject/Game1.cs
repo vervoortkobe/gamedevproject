@@ -13,7 +13,7 @@ namespace gamedevproject
         private SpriteBatch _spriteBatch;
 
         private Level _level;
-        private IGameState _gameState;
+        private GameState _gameState;
         private GameStateManager _gsman;
 
         public Game1()
