@@ -1,6 +1,8 @@
 ﻿using gamedevproject.Interfaces;
 using gamedevproject.LevelClasses;
+using gamedevproject.ScreenClasses;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
@@ -14,22 +16,25 @@ namespace gamedevproject.GameStateClasses
 
     public class GameStateManager
     {
+        private StartScreen _startScreen;
         private Level _level1;
         private Level _level2;
         private Level _level3;
         private GameState _gameState;
 
         #region Loading
-        public GameStateManager(IServiceProvider Services)
+        public GameStateManager(IServiceProvider Services, ContentManager Content)
         {
+            _startScreen = new StartScreen(Content);
+
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
                 _level1 = new Level(Services, fileStream, 1);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 2)))
-                _level2 = new Level(Services, fileStream, 2);
+                _level2 = new Level(Services, fileStream, 1);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
-                _level3 = new Level(Services, fileStream, 3);
+                _level3 = new Level(Services, fileStream, 1);
 
             _gameState = new GameState();
         }
@@ -41,6 +46,7 @@ namespace gamedevproject.GameStateClasses
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
+                    _startScreen.Update();
                     break;
                 case GameStates.LEVEL1:
                     _level1.Update(gameTime);
@@ -67,6 +73,7 @@ namespace gamedevproject.GameStateClasses
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
+                    _startScreen.Draw(_spriteBatch);
                     break;
                 case GameStates.LEVEL1:
                     _level1.Draw(gameTime, _spriteBatch);
