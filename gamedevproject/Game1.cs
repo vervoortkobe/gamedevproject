@@ -12,7 +12,6 @@ namespace gamedevproject
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Level _level;
         private GameState _gameState;
         private GameStateManager _gsman;
 
@@ -43,9 +42,9 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _gsman = new GameStateManager();
+            _gsman = new GameStateManager(Services);
             _gameState = new GameState();
-            _gameState.GameStateValue = GameStates.STARTSCREEN;
+            _gameState.GameStateValue = GameStates.LEVEL1;
             _gsman.ExecuteGameState(_gameState);
         }
 
@@ -72,7 +71,6 @@ namespace gamedevproject
 
         protected override void Draw(GameTime gameTime)
         {
-            _gsman = new GameStateManager();
             GraphicsDevice.Clear(Color.LightGray);
 
             _spriteBatch.Begin();

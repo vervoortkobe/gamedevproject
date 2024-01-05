@@ -12,24 +12,25 @@ namespace gamedevproject.GameStateClasses
         STARTSCREEN, LEVEL1, LEVEL2, LEVEL3, VICTORY, GAMEOVER
     }
 
-    internal class GameStateManager
+    public class GameStateManager
     {
         private Level _level;
-        private readonly IServiceProvider Services;
+        private GameState _gameState;
 
-        public GameStateManager() { }
+        public GameStateManager(IServiceProvider Services)
+        {
+            using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
+                _level = new Level(Services, fileStream, 1);
+            _gameState = new GameState();
+        }
 
         public void ExecuteGameState(GameState gameState)
         {
-            gameState = new GameState();
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
                     break;
                 case GameStates.LEVEL1:
-                    string levelPath = string.Format("Content/Levels/Level{0}", 1);
-                    using (Stream fileStream = TitleContainer.OpenStream(levelPath))
-                        _level = new Level(Services, fileStream, 1);
                     break;
                 case GameStates.LEVEL2:
                     break;

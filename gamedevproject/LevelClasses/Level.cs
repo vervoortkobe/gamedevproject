@@ -174,10 +174,5 @@ namespace gamedevproject.LevelClasses
                 }
             }
         }
-
-        public static implicit operator Level(StartScreen v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
