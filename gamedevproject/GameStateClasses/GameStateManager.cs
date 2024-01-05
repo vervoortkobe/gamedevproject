@@ -14,22 +14,14 @@ namespace gamedevproject.GameStateClasses
 
     internal class GameStateManager
     {
-        private GameState gameState { get; set; }
         private Level _level;
         private readonly IServiceProvider Services;
 
-        public GameStateManager()
-        {
-            return;
-        }
+        public GameStateManager() { }
 
-        public GameStateManager(GameState gameState)
+        public void ExecuteGameState(GameState gameState)
         {
-            this.gameState = gameState;
-        }
-
-        public void ExecuteGameState()
-        {
+            gameState = new GameState();
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
@@ -52,7 +44,7 @@ namespace gamedevproject.GameStateClasses
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, GameState gameState)
         {
             switch (gameState.GameStateValue)
             {
@@ -74,7 +66,7 @@ namespace gamedevproject.GameStateClasses
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch, GameState gameState)
         {
             switch (gameState.GameStateValue)
             {
