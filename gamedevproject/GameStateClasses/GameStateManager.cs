@@ -17,6 +17,7 @@ namespace gamedevproject.GameStateClasses
     public class GameStateManager
     {
         private GameState _gameState;
+        private SpriteBatch _spriteBatch;
         private StartScreen _startScreen;
         private Level _level1;
         private Level _level2;
@@ -25,11 +26,13 @@ namespace gamedevproject.GameStateClasses
         private GameOverScreen _gameOverScreen;
 
         #region Loading
-        public GameStateManager(IServiceProvider Services, ContentManager Content)
+        public GameStateManager(IServiceProvider Services, ContentManager Content, SpriteBatch spriteBatch)
         {
             _gameState = new GameState();
 
-            _startScreen = new StartScreen(Content, this, _gameState);
+            _spriteBatch = spriteBatch;
+
+            _startScreen = new StartScreen(Content, this, _gameState, _spriteBatch);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
                 _level1 = new Level(Services, fileStream, 1);
@@ -47,7 +50,7 @@ namespace gamedevproject.GameStateClasses
         #endregion
 
         #region Update GameState
-        public void Update(GameTime gameTime, GameState gameState)
+        public void Update(GameTime gameTime, SpriteBatch _spriteBatch, GameState gameState)
         {
             switch (gameState.GameStateValue)
             {
@@ -56,6 +59,7 @@ namespace gamedevproject.GameStateClasses
                     break;
                 case GameStates.LEVEL1:
                     _level1.Update(gameTime);
+                    Draw(gameTime, _spriteBatch, gameState);
                     break;
                 case GameStates.LEVEL2:
                     _level2.Update(gameTime);

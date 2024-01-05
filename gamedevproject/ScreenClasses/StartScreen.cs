@@ -13,13 +13,15 @@ namespace gamedevproject.ScreenClasses
     {
         private GameStateManager _gsman;
         private GameState _gameState;
+        private SpriteBatch _spriteBatch;
         private Texture2D _startTexture;
         private Texture2D _start;
 
-        public StartScreen(ContentManager Content, GameStateManager gsman, GameState gameState)
+        public StartScreen(ContentManager Content, GameStateManager gsman, GameState gameState, SpriteBatch spriteBatch)
         {
             _gsman = gsman;
             _gameState = gameState;
+            _spriteBatch = spriteBatch;
             _startTexture = Content.Load<Texture2D>("Backgrounds/startscreen2");
             _start = Content.Load<Texture2D>("Backgrounds/start2");
         }
@@ -30,7 +32,7 @@ namespace gamedevproject.ScreenClasses
                 Keyboard.GetState().IsKeyDown(Keys.M))
             {
                 _gameState.GameStateValue = GameStates.LEVEL1;
-                _gsman.Update(gameTime, _gameState);
+                _gsman.Update(gameTime, _spriteBatch, _gameState);
             }
         }
 

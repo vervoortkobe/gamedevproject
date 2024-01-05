@@ -42,7 +42,7 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _gsman = new GameStateManager(Services, Content);
+            _gsman = new GameStateManager(Services, Content, _spriteBatch);
             _gameState = new GameState();
             _gameState.GameStateValue = GameStates.STARTSCREEN;
         }
@@ -63,7 +63,7 @@ namespace gamedevproject
                 // Pause();
             }
 
-            _gsman.Update(gameTime, _gameState);
+            _gsman.Update(gameTime, _spriteBatch, _gameState);
             
             base.Update(gameTime);
         }
