@@ -16,16 +16,20 @@ namespace gamedevproject.GameStateClasses
 
     public class GameStateManager
     {
+        private GameState _gameState;
         private StartScreen _startScreen;
         private Level _level1;
         private Level _level2;
         private Level _level3;
-        private GameState _gameState;
+        private VictoryScreen _victoryScreen;
+        private GameOverScreen _gameOverScreen;
 
         #region Loading
         public GameStateManager(IServiceProvider Services, ContentManager Content)
         {
-            _startScreen = new StartScreen(Content);
+            _gameState = new GameState();
+
+            _startScreen = new StartScreen(Content, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
                 _level1 = new Level(Services, fileStream, 1);
@@ -36,7 +40,9 @@ namespace gamedevproject.GameStateClasses
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
                 _level3 = new Level(Services, fileStream, 1);
 
-            _gameState = new GameState();
+            _victoryScreen = new VictoryScreen();
+
+            _gameOverScreen = new GameOverScreen();
         }
         #endregion
 
@@ -58,8 +64,10 @@ namespace gamedevproject.GameStateClasses
                     _level3.Update(gameTime);
                     break;
                 case GameStates.VICTORY:
+                    _victoryScreen.Update();
                     break;
                 case GameStates.GAMEOVER:
+                    _gameOverScreen.Update();
                     break;
                 default:
                     break;
@@ -85,8 +93,10 @@ namespace gamedevproject.GameStateClasses
                     _level3.Update(gameTime);
                     break;
                 case GameStates.VICTORY:
+                    _victoryScreen.Draw(_spriteBatch);
                     break;
                 case GameStates.GAMEOVER:
+                    _gameOverScreen.Draw(_spriteBatch);
                     break;
                 default:
                     break;

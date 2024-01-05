@@ -1,28 +1,29 @@
-﻿using gamedevproject.Interfaces;
+﻿using gamedevproject.GameStateClasses;
+using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
-using System;
-using System.IO;
-using System.Reflection.Metadata;
+using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.ScreenClasses
 {
     internal class StartScreen : IScreen
     {
+        private GameState _gameState;
         private Texture2D _startTexture;
         private Texture2D _start;
 
-        public StartScreen(ContentManager Content)
+        public StartScreen(ContentManager Content, GameState gameState)
         {
+            _gameState = gameState;
             _startTexture = Content.Load<Texture2D>("Backgrounds/startscreen2");
             _start = Content.Load<Texture2D>("Backgrounds/start2");
         }
 
         public void Update()
         {
-
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Enter)) _gameState.GameStateValue = GameStates.LEVEL1;
         }
 
         public void Draw(SpriteBatch _spriteBatch)
