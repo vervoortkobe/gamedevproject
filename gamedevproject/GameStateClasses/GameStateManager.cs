@@ -29,7 +29,7 @@ namespace gamedevproject.GameStateClasses
         {
             _gameState = new GameState();
 
-            _startScreen = new StartScreen(Content, _gameState);
+            _startScreen = new StartScreen(Content, this, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
                 _level1 = new Level(Services, fileStream, 1);
@@ -52,7 +52,7 @@ namespace gamedevproject.GameStateClasses
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
-                    _startScreen.Update();
+                    _startScreen.Update(gameTime);
                     break;
                 case GameStates.LEVEL1:
                     _level1.Update(gameTime);
@@ -64,10 +64,10 @@ namespace gamedevproject.GameStateClasses
                     _level3.Update(gameTime);
                     break;
                 case GameStates.VICTORY:
-                    _victoryScreen.Update();
+                    _victoryScreen.Update(gameTime);
                     break;
                 case GameStates.GAMEOVER:
-                    _gameOverScreen.Update();
+                    _gameOverScreen.Update(gameTime);
                     break;
                 default:
                     break;
