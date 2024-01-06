@@ -73,7 +73,7 @@ namespace gamedevproject.PlayerClasses
         {
             Position = position;
             IsAlive = true;
-            IsOnGround = false;
+            IsOnGround = true;
             // Implement: set state to idle 
         }
 
@@ -84,8 +84,8 @@ namespace gamedevproject.PlayerClasses
 
         public void Update(GameTime gameTime)
         {
-            Move(gameTime);
             animation.Update(gameTime);
+            Move(gameTime);
         }
 
         private void Move(GameTime gameTime)

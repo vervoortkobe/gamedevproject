@@ -12,7 +12,7 @@ namespace gamedevproject.MovementClasses
     class MovementManager
     {
 
-        public float Gravity = 15f;
+        public float Gravity = 1250f;
 
         Level level;
 
@@ -21,16 +21,18 @@ namespace gamedevproject.MovementClasses
             this.level = level;
         }
 
-        public void Move(IMovable movable, Level level, GameTime gameTime)
+        public void Move(IMovable player, Level level, GameTime gameTime)
         {
             //Todo: Add gravity to player class or maybe game class?
 
-            var input = movable.InputReader.ReadInput();
+            var input = player.InputReader.ReadInput();
+            
+            player.StateManager.CurrentState.HandleInput(input);
 
-            movable.StateManager.CurrentState.HandleInput(input);
+            float velocityX = player.Direction.X;
+            float velocityY = player.Direction.Y;
 
-            float velocityX = movable.Direction.X;
-            float velocityY = movable.Direction.Y;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // X-axis Movement
 
@@ -41,87 +43,75 @@ namespace gamedevproject.MovementClasses
 
             if (input == Keys.Right)
             {
-                movable.SpriteEffects = SpriteEffects.None;
-                velocityX = 25.0f;
+                player.SpriteEffects = SpriteEffects.None;
+                velocityX += 350.0f * deltaTime;
             }
 
             if (input == Keys.Left)
             {
-                movable.SpriteEffects = SpriteEffects.FlipHorizontally;
-                velocityX = -25.0f;
+                player.SpriteEffects = SpriteEffects.FlipHorizontally;
+                velocityX += -350.0f * deltaTime;
             }
 
             //Gravity working on the player
-            velocityY += Gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (input == Keys.Space)
-            {
-                if (velocityY == 0)
-                {
-                    velocityY = -25.0f;
-                    movable.IsOnGround = true;
-                }
+            if (!player.IsOnGround) 
+            { 
+                velocityY += Gravity * deltaTime; 
             }
 
-            Vector2 velocity = new Vector2(velocityX, velocityY);
+            if (input == Keys.Space && player.IsOnGround)
+            {
+                velocityY = -500.0f;
+            }
 
-            movable.NewPosition = movable.Position + velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            player.Direction = new Vector2(velocityX, velocityY);
 
-            //CheckCollisions(level, movable);
-
-            movable.Position = movable.NewPosition;
+            UpdatePosition(level, player, gameTime);
+            
         }
 
-        public void CheckCollisions(Level level, IMovable movable)
+        public void UpdatePosition(Level level, IMovable player, GameTime gameTime)
         {
-            //Check X Collision
+            //Reset OnGround Check
+            player.IsOnGround = false;
 
-            Vector2 positionInTiles = new Vector2(movable.Position.X / LevelTile.Width, movable.Position.Y / LevelTile.Height);
-            Vector2 newPositionInTiles = new Vector2(movable.NewPosition.X / LevelTile.Width, movable.NewPosition.Y / LevelTile.Height);
+            //Calculate new position
+            var newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (movable.Direction.X <= 0)
+            //Calculate new Bounds according to the new position
+            Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y,48,48);
+
+            //Iterate through the list and offset the player position outside the collider
+            foreach (var collider in level.GetNearestColliders(newBounds))
             {
-                if (level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(positionInTiles.Y + 0.0f)) == TileCollision.Impassable
-                    || level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(positionInTiles.Y + 0.9f)) == TileCollision.Impassable)
+                if (newPosition.X != player.Position.X)
                 {
-                    movable.NewPosition = new Vector2((int)movable.NewPosition.X + 1, movable.Position.Y);
-                    movable.Direction = new Vector2(0, movable.Direction.Y);
+                    newBounds = new Rectangle((int)newPosition.X, (int)player.Position.Y,48,48);
+                    if (newBounds.Intersects(collider))
+                    {
+                        if (newPosition.X > player.Position.X) newPosition.X = collider.Left - 48;
+                        else newPosition.X = collider.Right;
+                        continue;
+                    }
+                }
+
+                newBounds = new Rectangle((int)player.Position.X, (int)newPosition.Y,48,48);
+                if (newBounds.Intersects(collider))
+                {
+                    if (player.Direction.Y > 0)
+                    {
+                        newPosition.Y = collider.Top - 48;
+                        player.IsOnGround = true;
+                        player.Direction = new Vector2(player.Direction.X, 0);
+                    }
+                    else
+                    {
+                        newPosition.Y = collider.Bottom;
+                        player.Direction = new Vector2(player.Direction.X, 0);
+                    }
                 }
             }
-            else
-            {
-                if (level.GetCollision((int)(newPositionInTiles.X + 1.0f), (int)(positionInTiles.Y + 0.0f)) == TileCollision.Impassable
-                    || level.GetCollision((int)(newPositionInTiles.X + 1.0f), (int)(positionInTiles.Y + 0.9f)) == TileCollision.Impassable)
-                {
-                    movable.NewPosition = new Vector2((int)movable.NewPosition.X, movable.Position.Y);
-                    movable.Direction = new Vector2(0, movable.Direction.Y);
-                }
-            }
-
-            //Recalculate the position in tiles with the new x position
-
-            newPositionInTiles = new Vector2(movable.NewPosition.X / LevelTile.Width, movable.NewPosition.Y / LevelTile.Height);
-
-            //Check Y Collision
-
-            if (movable.Direction.Y <= 0)
-            {
-                if (level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(newPositionInTiles.Y + 0.0f)) == TileCollision.Impassable
-                    || level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(newPositionInTiles.Y + 0.9f)) == TileCollision.Impassable)
-                {
-                    movable.NewPosition = new Vector2(movable.NewPosition.X, (int)movable.Position.Y + 1);
-                    movable.Direction = new Vector2(movable.Direction.X, 0);
-                }
-            }
-            else
-            {
-                if (level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(newPositionInTiles.Y + 0.0f)) == TileCollision.Impassable
-                    || level.GetCollision((int)(newPositionInTiles.X + 0.0f), (int)(newPositionInTiles.Y + 0.9f)) == TileCollision.Impassable)
-                {
-                    movable.NewPosition = new Vector2(movable.NewPosition.X, (int)movable.Position.Y);
-                    movable.Direction = new Vector2(movable.Direction.X, 0);
-                }
-            }
+            player.Position = newPosition;
         }
     }
 }

@@ -24,9 +24,13 @@ namespace gamedevproject.States
 
         public override void HandleInput(Keys input)
         {
-            if (player.IsOnGround)
+            if (player.IsOnGround && input == Keys.None)
             {
                 player.StateManager.SetState(PlayerStates.IDLE);
+            }
+            if(player.IsOnGround && (input == Keys.Left || input == Keys.Right))
+            {
+                player.StateManager.SetState(PlayerStates.RUNNING);
             }
         }
     }
