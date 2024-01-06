@@ -70,7 +70,7 @@ namespace gamedevproject.GameStateClasses
                 case GameStates.VICTORY:
                     _victoryScreen.Update(gameTime);
                     break;
-                case GameStates.GAMEOVER:
+                case GameStates.GAMEOVER: 
                     _gameOverScreen.Update(gameTime);
                     break;
                 default:
