@@ -18,7 +18,6 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
         private Level _level;
 
         public Game1()
