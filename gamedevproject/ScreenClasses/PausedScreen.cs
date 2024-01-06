@@ -15,5 +15,10 @@ namespace gamedevproject.ScreenClasses
         {
 
         }
+
+        public void Unload()
+        {
+
+        }
     }
 }

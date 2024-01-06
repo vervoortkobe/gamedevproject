@@ -44,7 +44,7 @@ namespace gamedevproject.GameStateClasses
 
             _victoryScreen = new VictoryScreen();
 
-            _gameOverScreen = new GameOverScreen();
+            _gameOverScreen = new GameOverScreen(Content, this, _gameState, _spriteBatch);
         }
         #endregion
 
@@ -54,9 +54,12 @@ namespace gamedevproject.GameStateClasses
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
+                    _victoryScreen.Unload();
+                    _gameOverScreen.Unload();
                     _startScreen.Update(gameTime);
                     break;
                 case GameStates.LEVEL1:
+                    _startScreen.Unload();
                     _level1.Update(gameTime);
                     break;
                 case GameStates.LEVEL2:
@@ -89,10 +92,10 @@ namespace gamedevproject.GameStateClasses
                     _level1.Draw(gameTime, _spriteBatch);
                     break;
                 case GameStates.LEVEL2:
-                    _level2.Update(gameTime);
+                    _level2.Draw(gameTime, _spriteBatch);
                     break;
                 case GameStates.LEVEL3:
-                    _level3.Update(gameTime);
+                    _level3.Draw(gameTime, _spriteBatch);
                     break;
                 case GameStates.VICTORY:
                     _victoryScreen.Draw(gameTime, _spriteBatch);
