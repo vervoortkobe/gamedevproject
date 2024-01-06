@@ -42,7 +42,7 @@ namespace gamedevproject.GameStateClasses
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
                 _level3 = new Level(Services, fileStream, 1);
 
-            _victoryScreen = new VictoryScreen();
+            _victoryScreen = new VictoryScreen(Content, this, _gameState, _spriteBatch);
 
             _gameOverScreen = new GameOverScreen(Content, this, _gameState, _spriteBatch);
         }
