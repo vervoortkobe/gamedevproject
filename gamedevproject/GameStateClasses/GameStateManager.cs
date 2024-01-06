@@ -29,7 +29,6 @@ namespace gamedevproject.GameStateClasses
         public GameStateManager(IServiceProvider Services, ContentManager Content, SpriteBatch spriteBatch)
         {
             _gameState = new GameState();
-
             _spriteBatch = spriteBatch;
 
             _startScreen = new StartScreen(Content, this, _gameState, _spriteBatch);
@@ -59,7 +58,6 @@ namespace gamedevproject.GameStateClasses
                     break;
                 case GameStates.LEVEL1:
                     _level1.Update(gameTime);
-                    Draw(gameTime, _spriteBatch, gameState);
                     break;
                 case GameStates.LEVEL2:
                     _level2.Update(gameTime);
@@ -85,7 +83,7 @@ namespace gamedevproject.GameStateClasses
             switch (gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
-                    _startScreen.Draw(_spriteBatch);
+                    _startScreen.Draw(gameTime, _spriteBatch);
                     break;
                 case GameStates.LEVEL1:
                     _level1.Draw(gameTime, _spriteBatch);
@@ -97,10 +95,10 @@ namespace gamedevproject.GameStateClasses
                     _level3.Update(gameTime);
                     break;
                 case GameStates.VICTORY:
-                    _victoryScreen.Draw(_spriteBatch);
+                    _victoryScreen.Draw(gameTime, _spriteBatch);
                     break;
                 case GameStates.GAMEOVER:
-                    _gameOverScreen.Draw(_spriteBatch);
+                    _gameOverScreen.Draw(gameTime, _spriteBatch);
                     break;
                 default:
                     break;

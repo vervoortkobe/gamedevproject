@@ -11,7 +11,7 @@ namespace gamedevproject.ScreenClasses
 
         }
 
-        public void Draw(SpriteBatch _spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
 
         }
