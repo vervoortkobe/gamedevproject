@@ -9,11 +9,13 @@ namespace gamedevproject.ScreenClasses
 {
     internal class StartScreen : IScreen
     {
+        #region Properties
         private GameStateManager _gsman;
         private GameState _gameState;
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private Texture2D _text;
+        #endregion
 
         public StartScreen(ContentManager Content, GameStateManager gsman, GameState gameState, SpriteBatch spriteBatch)
         {
