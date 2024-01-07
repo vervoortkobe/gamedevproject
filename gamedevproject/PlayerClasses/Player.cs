@@ -6,12 +6,6 @@ using gamedevproject.MovementClasses;
 using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gamedevproject.PlayerClasses
 {
@@ -26,6 +20,7 @@ namespace gamedevproject.PlayerClasses
         Level level;
         
         public Vector2 Position { get; set; }
+        public Vector2 NewPosition { get; set; }
         public Vector2 Direction { get; set; }
         public Rectangle Bounds 
         { 
@@ -63,6 +58,7 @@ namespace gamedevproject.PlayerClasses
             InputReader = new KeyboardReader();
             MovementManager = new MovementManager(level);
             
+            //Animation is assigned and updated inside the StateManager
             StateManager = new StateManager(this);
         }
 

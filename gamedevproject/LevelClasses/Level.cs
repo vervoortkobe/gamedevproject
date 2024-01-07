@@ -1,4 +1,5 @@
 ﻿using gamedevproject.PlayerClasses;
+using gamedevproject.ScreenClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +27,7 @@ namespace gamedevproject.LevelClasses
         public Player Player { get { return player; } }
         private Player player;
 
+        //Starting point, defined in LoadStartingTile()
         private Vector2 start;
 
         public ContentManager Content { get { return content; } }
@@ -125,14 +127,16 @@ namespace gamedevproject.LevelClasses
 
         public TileCollision GetCollision(int x, int y)
         {
+            // Prevent escaping past the level ends.
             if (x < 0 || x >= Width)
                 return TileCollision.Impassable;
+            // Allow jumping past the level top and falling through the bottom.
             if (y < 0 || y >= Height)
                 return TileCollision.Passable;
 
             return tiles[x, y].Collision;
         }
-
+     
         public List<Rectangle> GetNearestColliders(Rectangle bounds)
         {
             int leftTile = (int)Math.Floor((float)bounds.Left / LevelTile.Width)-1;
@@ -188,6 +192,11 @@ namespace gamedevproject.LevelClasses
             DrawTiles(spriteBatch);
 
             player.Draw(spriteBatch);
+        }
+
+        public void Unload()
+        {
+            Dispose();
         }
 
         private void DrawTiles(SpriteBatch spriteBatch)

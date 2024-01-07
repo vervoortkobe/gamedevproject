@@ -1,4 +1,6 @@
-﻿using gamedevproject.LevelClasses;
+﻿using gamedevproject.GameStateClasses;
+using gamedevproject.Interfaces;
+using gamedevproject.LevelClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,7 +12,9 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Level _level;
+
+        private GameState _gameState;
+        private GameStateManager _gsman;
 
         public Game1()
         {
@@ -27,6 +31,8 @@ namespace gamedevproject
 
         protected override void Initialize()
         {
+            // ONDERZOEKEN WAT DIT DOET ?!
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -37,26 +43,31 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            string levelPath = string.Format("Content/Levels/Level{0}.txt", 1);
-            using (Stream fileStream = TitleContainer.OpenStream(levelPath))
-                _level = new Level(Services, fileStream, 1);
+            _gsman = new GameStateManager(Services, Content, _spriteBatch);
+            _gameState = new GameState();
+            _gameState.GameStateValue = GameStates.STARTSCREEN;
         }
 
         protected override void Update(GameTime gameTime)
         {
             //Add GameButtons for Pausing / Exit / Restart Level
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.R))
             {
-                Exit();
+                // Restart();
+            }
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                // Pause();
             }
 
-            _level.Update(gameTime);
+            _gsman.Update(gameTime, _spriteBatch, _gameState);
             
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -64,7 +75,7 @@ namespace gamedevproject
 
             _spriteBatch.Begin();
 
-            _level.Draw(gameTime,_spriteBatch);
+            _gsman.Draw(gameTime, _spriteBatch, _gameState);
 
             // DrawHUD()
 

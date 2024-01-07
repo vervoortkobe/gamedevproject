@@ -1,6 +1,5 @@
 ﻿using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace gamedevproject.States
 {
