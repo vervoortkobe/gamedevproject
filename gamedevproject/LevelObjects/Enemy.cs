@@ -23,7 +23,6 @@ namespace gamedevproject.LevelObjects
         Texture2D enemyTexture;
 
         LevelClasses.Level level;
-
         public int DistanceTraveled { get; set; }
         public int MaxDistance { get; set; }
         public Vector2 Position { get; set; }

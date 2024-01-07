@@ -6,6 +6,7 @@ using gamedevproject.MovementClasses;
 using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace gamedevproject.PlayerClasses
 {

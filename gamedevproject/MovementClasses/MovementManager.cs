@@ -5,6 +5,7 @@ using System;
 using SharpDX.MediaFoundation;
 using gamedevproject.LevelClasses;
 using SharpDX.Direct2D1.Effects;
+using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.MovementClasses
 {
