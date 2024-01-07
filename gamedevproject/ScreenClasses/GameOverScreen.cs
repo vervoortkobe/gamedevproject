@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.ScreenClasses
 {
-    internal class GameOverScreen: IScreen
+    public class GameOverScreen: IScreen
     {
         private GameStateManager _gsman;
         private GameState _gameState;

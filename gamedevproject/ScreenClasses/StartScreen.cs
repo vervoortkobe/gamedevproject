@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace gamedevproject.ScreenClasses
 {
-    internal class StartScreen : IScreen
+    public class StartScreen : IScreen
     {
         #region Properties
         private GameStateManager _gsman;

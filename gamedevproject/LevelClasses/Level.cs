@@ -241,6 +241,7 @@ namespace gamedevproject.LevelClasses
                 default:
                     break;
             }
+
             spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
         }
     }

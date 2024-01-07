@@ -1,10 +1,7 @@
 ﻿using gamedevproject.GameStateClasses;
-using gamedevproject.Interfaces;
-using gamedevproject.LevelClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.IO;
 
 namespace gamedevproject
 {
@@ -64,8 +61,6 @@ namespace gamedevproject
             _spriteBatch.Begin();
 
             _gsman.Draw(gameTime, _spriteBatch);
-
-            // DrawHUD()
 
             _spriteBatch.End();
 

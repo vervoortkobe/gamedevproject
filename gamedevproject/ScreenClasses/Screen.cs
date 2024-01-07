@@ -4,18 +4,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Reflection.Metadata;
 
 namespace gamedevproject.ScreenClasses
 {
-    internal class Screen: IScreen
+    public class Screen: IScreen
     {
         #region Properties
-        private ContentManager _content;
         private GameStateManager _gsman;
         private GameState _gameState;
         private SpriteBatch _spriteBatch;
 
-        private GameStates compareGameStates;
+        private GameStates _nextGameState;
 
         private Texture2D _startScreenTexture;
         private Texture2D _startScreenText;
@@ -28,19 +29,40 @@ namespace gamedevproject.ScreenClasses
         #region Loading
         public Screen(ContentManager Content, GameStateManager gsman, GameState gameState, SpriteBatch spriteBatch)
         {
-            _content = Content;
             _gsman = gsman;
             _gameState = gameState;
             _spriteBatch = spriteBatch;
 
-            compareGameStates = _gameState.GameStateValue;
+            switch (_gameState.GameStateValue)
+            {
+                case GameStates.STARTSCREEN:
+                    _nextGameState = GameStates.LEVEL1;
+                    break;
+                case GameStates.LEVEL1:
+                    _nextGameState = GameStates.LEVEL2;
+                    break;
+                case GameStates.LEVEL2:
+                    _nextGameState = GameStates.LEVEL2;
+                    break;
+                case GameStates.LEVEL3:
+                    _nextGameState = GameStates.VICTORY;
+                    break;
+                case GameStates.VICTORY:
+                    _nextGameState = GameStates.STARTSCREEN;
+                    break;
+                case GameStates.GAMEOVER:
+                    _nextGameState = GameStates.STARTSCREEN;
+                    break;
+                default:
+                    break;
+            }
 
-            _startScreenTexture = _content.Load<Texture2D>("Backgrounds/startscreen2");
-            _startScreenText = _content.Load<Texture2D>("Backgrounds/start2");
-            _victoryTexture = _content.Load<Texture2D>("Backgrounds/extra3");
-            _victoryText = _content.Load<Texture2D>("Backgrounds/victory2");
-            _gameOverTexture = _content.Load<Texture2D>("Backgrounds/extra2");
-            _gameOverText = _content.Load<Texture2D>("Backgrounds/gameover2");
+            _startScreenTexture = Content.Load<Texture2D>("Backgrounds/startscreen2");
+            _startScreenText = Content.Load<Texture2D>("Backgrounds/start2");
+            _victoryTexture = Content.Load<Texture2D>("Backgrounds/extra3");
+            _victoryText = Content.Load<Texture2D>("Backgrounds/victory2");
+            _gameOverTexture = Content.Load<Texture2D>("Backgrounds/extra2");
+            _gameOverText = Content.Load<Texture2D>("Backgrounds/gameover2");
         }
         #endregion
 
@@ -48,6 +70,7 @@ namespace gamedevproject.ScreenClasses
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
                 switch (_gameState.GameStateValue)
                 {
                     case GameStates.STARTSCREEN:
@@ -63,49 +86,50 @@ namespace gamedevproject.ScreenClasses
                     default:
                         break;
                 }
+            }
 
-            if (compareGameStates != _gameState.GameStateValue)
+            if (_gameState.GameStateValue == _nextGameState)
                 _gsman.Update(gameTime, _spriteBatch);
         }
+
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            Texture2D background = null;
-            Texture2D text = null;
-            float scaleY = 0.0f;
             
             switch (_gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
-                    background = _startScreenTexture;
-                    text = _startScreenText;
-                    scaleY = 0.27f;
+                    DrawScreen(_startScreenTexture, _startScreenText, 0.27f);
                     break;
                 case GameStates.VICTORY:
-                    background = _victoryTexture;
-                    text = _victoryText;
-                    scaleY = 0.25f;
+                    DrawScreen(_victoryTexture, _victoryText, 0.25f);
                     break;
                 case GameStates.GAMEOVER:
-                    background = _gameOverTexture;
-                    text = _gameOverText;
-                    scaleY = 0.25f;
+                    DrawScreen(_gameOverTexture, _gameOverText, 0.25f);
                     break;
 
                 default:
                     break;
             }
 
+            if (_gameState.GameStateValue == _nextGameState)
+                _gsman.Draw(gameTime, _spriteBatch);
+        }
+
+        private void DrawScreen(Texture2D background, Texture2D text, float scaleY)
+        {
             _spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
 
             _spriteBatch.Draw(text, new Vector2(5, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.27f, scaleY), SpriteEffects.None, 0f);
-
-            if (compareGameStates != _gameState.GameStateValue)
-                _gsman.Draw(gameTime, _spriteBatch);
         }
 
         public void Unload()
         {
-            _content.Dispose();
+            _startScreenTexture.Dispose();
+            _startScreenText.Dispose();
+            _victoryTexture.Dispose();
+            _victoryText.Dispose();
+            _gameOverTexture.Dispose();
+            _gameOverText.Dispose();
         }
     }
 }
