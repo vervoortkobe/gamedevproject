@@ -1,60 +1,68 @@
 ﻿using gamedevproject.AnimationClasses;
+using gamedevproject.InputClasses;
 using gamedevproject.Interfaces;
+using gamedevproject.LevelClasses;
 using gamedevproject.MovementClasses;
-using gamedevproject.PlayerClasses;
 using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct3D9;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gamedevproject.LevelObjects
 {
-    internal class Enemy : IGameObject
+    internal class Enemy : IMovable, IGameObject
     {
         Animation animation;
 
-        Player Player;
-
         Texture2D enemyTexture;
 
-        LevelClasses.Level level;
+        Level level;
+
         public int DistanceTraveled { get; set; }
         public int MaxDistance { get; set; }
         public Vector2 Position { get; set; }
-        public Vector2 NewPosition { get; set; }
         public Vector2 Direction { get; set; }
-        public Vector2 Speed { get; set; }
-        public Rectangle Bounds { get; set; }
+        public float Speed { get; set; }
+        public Rectangle Bounds
+        {
+            get
+            {
+                int left = (int)Math.Round(Position.X);
+                int top = (int)Math.Round(Position.Y);
+                return new Rectangle(left, top, 48, 48);
+            }
+        }
         public SpriteEffects SpriteEffects { get; set; }
         public IInputReader InputReader { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
         public bool IsOnGround { get; set; }
 
-        public Enemy(Texture2D texture, Player player)
+        public Enemy(Level level, Vector2 position)
         {
-            enemyTexture = texture;
-            animation = new Animation();
-            Player = player;
+            this.level = level;
 
-            //Managers
-            MovementManager = new MovementManager(level);
+            LoadContent();
 
+            Position = position;
             IsOnGround = false;
-            Position = new Vector2(720, 720 - 84);
-            Direction = new Vector2(1, 0);
-            Speed = new Vector2(1, 1);
+            Direction = new Vector2(0, 0);
+            Speed = 1.0f;
 
             DistanceTraveled = 0;
             MaxDistance = 320;
-
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
         }
+
+        public void LoadContent()
+        {
+            //Sprite aanpassen naar Enemy Sprite, liefst 3 verschillende;
+            enemyTexture = level.Content.Load<Texture2D>("Sprites/Block1");
+
+            animation = new Animation();
+
+            MovementManager = new MovementManager(level);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(enemyTexture, Position, Bounds, Color.White);
@@ -62,27 +70,31 @@ namespace gamedevproject.LevelObjects
 
         public void Update(GameTime gameTime)
         {
-            Move();
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
+            Move(gameTime);
         }
 
-        public void Move()
+        public void Move(GameTime gameTime)
         {
             Position += Direction * Speed;
 
-            if(Position.X < Player.Position.X)
+            if(Position.X < level.Player.Position.X)
             {
                 Direction = new Vector2(1, Direction.Y);
+                SpriteEffects = SpriteEffects.None;
             }
-            if (Position.X > Player.Position.X)
+            if (Position.X > level.Player.Position.X)
             {
                 Direction = new Vector2(-1, Direction.Y);
+                SpriteEffects = SpriteEffects.FlipHorizontally;
             }
-            if (Position.X == Player.Position.X)
+            if (Position.X == level.Player.Position.X)
             {
                 Direction = new Vector2(0, Direction.Y);
             }
+
+            //CollisionCheck implementeren
+            MovementManager.UpdatePosition(level, this, gameTime);
+
         }
-        
     }
 }

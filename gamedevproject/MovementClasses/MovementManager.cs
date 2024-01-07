@@ -62,7 +62,6 @@ namespace gamedevproject.MovementClasses
             player.Direction = new Vector2(velocityX, velocityY);
 
             UpdatePosition(level, player, gameTime);
-            
         }
 
         public void UpdatePosition(Level level, IMovable player, GameTime gameTime)

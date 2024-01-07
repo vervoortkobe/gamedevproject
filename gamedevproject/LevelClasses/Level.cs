@@ -1,5 +1,4 @@
 ﻿using gamedevproject.GameStateClasses;
-using gamedevproject.Interfaces;
 using gamedevproject.LevelObjects;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
@@ -20,8 +19,8 @@ namespace gamedevproject.LevelClasses
         public Player Player { get { return player; } }
         private Player player;
 
-        public Enemy Enemy { get { return enemy; } }
-        private Enemy enemy;
+        public List<Enemy> Enemies { get { return enemies; } }
+        private List<Enemy> enemies;
 
         private Vector2 start;
         private Vector2 spawn;
@@ -93,7 +92,7 @@ namespace gamedevproject.LevelClasses
                 case '1':
                     return LoadStartTile(x, y);
                 case '2':
-                    return LoadSpawnTile(x, y);
+                    return LoadEnemySpawnTile(x, y);
                 case '3':
                     return LoadEndTile(x, y);
                 case '#':
@@ -117,16 +116,30 @@ namespace gamedevproject.LevelClasses
             return new LevelTile(null, TileCollision.Passable);
         }
 
-        private LevelTile LoadSpawnTile(int x, int y)
+        private LevelTile LoadEnemySpawnTile(int x, int y)
         {
-            if (Enemy != null)
-                throw new NotSupportedException("A level may only have one enemy point");
+            if(Enemies == null)
+            {
+                enemies = new List<Enemy>();
+            }
 
             Rectangle rect = GetBounds(x, y);
 
             spawn = new Vector2(rect.X, rect.Top);
 
-            enemy = new Enemy(this, spawn);
+            enemies.Add(new Enemy(this, spawn));
+
+            return new LevelTile(null, TileCollision.Passable);
+        }
+
+        private LevelTile LoadEndTile(int x, int y)
+        {
+            if (Player != null)
+                throw new NotSupportedException("A level may only have one end point.");
+
+            Rectangle rect = GetBounds(x, y);
+
+            end = new Vector2(rect.X, rect.Top);
 
             return new LevelTile(null, TileCollision.Passable);
         }
@@ -205,6 +218,10 @@ namespace gamedevproject.LevelClasses
         public void Update(GameTime gameTime)
         {
             player.Update(gameTime);
+            foreach (var enemy in Enemies)
+            {
+                enemy.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -212,6 +229,11 @@ namespace gamedevproject.LevelClasses
             DrawBackground(spriteBatch);
             DrawTiles(spriteBatch);
             player.Draw(spriteBatch);
+
+            foreach (var enemy in Enemies)
+            {
+                enemy.Draw(spriteBatch);
+            }
         }
 
         public void Unload()
