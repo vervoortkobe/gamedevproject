@@ -1,16 +1,12 @@
-﻿using gamedevproject.PlayerClasses;
-using gamedevproject.ScreenClasses;
+﻿using gamedevproject.GameStateClasses;
+using gamedevproject.Interfaces;
+using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
-using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gamedevproject.LevelClasses
 {
@@ -32,13 +28,25 @@ namespace gamedevproject.LevelClasses
         public ContentManager Content { get { return content; } }
         private ContentManager content;
 
+        private GameState _gameState;
+
+        private Texture2D background_level1;
+        private Texture2D background_level2;
+        private Texture2D background_level3;
+
         #endregion
 
         #region Loading
 
-        public Level(IServiceProvider service, Stream filestream, int levelIndex)
+        public Level(IServiceProvider service, Stream filestream, int levelIndex, GameState gameState)
         {
             content = new ContentManager(service, "Content");
+
+            _gameState = gameState;
+
+            background_level1 = Content.Load<Texture2D>("Backgrounds/city3");
+            background_level2 = Content.Load<Texture2D>("Backgrounds/forest");
+            background_level3 = Content.Load<Texture2D>("Backgrounds/clouds2");
 
             LoadTiles(filestream);
         }
@@ -186,8 +194,8 @@ namespace gamedevproject.LevelClasses
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawBackground(spriteBatch);
             DrawTiles(spriteBatch);
-
             player.Draw(spriteBatch);
         }
 
@@ -215,5 +223,25 @@ namespace gamedevproject.LevelClasses
             }
         }
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            Texture2D background = null;
+            switch (_gameState.GameStateValue)
+            {
+                case GameStates.LEVEL1:
+                    background = background_level1;
+                    break;
+                case GameStates.LEVEL2:
+                    background = background_level2;
+                    break;
+                case GameStates.LEVEL3:
+                    background = background_level3;
+                    break;
+
+                default:
+                    break;
+            }
+            spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
+        }
     }
 }

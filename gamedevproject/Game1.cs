@@ -41,9 +41,9 @@ namespace gamedevproject
 
             // TODO: use this.Content to load your game content here
 
-            _gsman = new GameStateManager(Services, Content, _spriteBatch);
             _gameState = new GameState();
             _gameState.GameStateValue = GameStates.STARTSCREEN;
+            _gsman = new GameStateManager(Services, Content, _spriteBatch, _gameState);
         }
 
         protected override void Update(GameTime gameTime)
@@ -62,7 +62,7 @@ namespace gamedevproject
                 // Pause();
             }
 
-            _gsman.Update(gameTime, _spriteBatch, _gameState);
+            _gsman.Update(gameTime, _spriteBatch);
             
             base.Update(gameTime);
         }
@@ -73,7 +73,7 @@ namespace gamedevproject
 
             _spriteBatch.Begin();
 
-            _gsman.Draw(gameTime, _spriteBatch, _gameState);
+            _gsman.Draw(gameTime, _spriteBatch);
 
             // DrawHUD()
 

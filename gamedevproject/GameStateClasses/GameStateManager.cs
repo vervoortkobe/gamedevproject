@@ -26,21 +26,21 @@ namespace gamedevproject.GameStateClasses
         private GameOverScreen _gameOverScreen;
 
         #region Loading
-        public GameStateManager(IServiceProvider Services, ContentManager Content, SpriteBatch spriteBatch)
+        public GameStateManager(IServiceProvider Services, ContentManager Content, SpriteBatch spriteBatch, GameState gameState)
         {
-            _gameState = new GameState();
+            _gameState = gameState;
             _spriteBatch = spriteBatch;
 
             _startScreen = new StartScreen(Content, this, _gameState, _spriteBatch);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
-                _level1 = new Level(Services, fileStream, 1);
+                _level1 = new Level(Services, fileStream, 1, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 2)))
-                _level2 = new Level(Services, fileStream, 1);
+                _level2 = new Level(Services, fileStream, 1, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
-                _level3 = new Level(Services, fileStream, 1);
+                _level3 = new Level(Services, fileStream, 1, _gameState);
 
             _victoryScreen = new VictoryScreen(Content, this, _gameState, _spriteBatch);
 
@@ -49,9 +49,9 @@ namespace gamedevproject.GameStateClasses
         #endregion
 
         #region Update GameState
-        public void Update(GameTime gameTime, SpriteBatch _spriteBatch, GameState gameState)
+        public void Update(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            switch (gameState.GameStateValue)
+            switch (_gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
                     _victoryScreen.Unload();
@@ -78,6 +78,7 @@ namespace gamedevproject.GameStateClasses
                     _level3.Unload();
                     _gameOverScreen.Update(gameTime);
                     break;
+
                 default:
                     break;
             }
@@ -85,9 +86,9 @@ namespace gamedevproject.GameStateClasses
         #endregion
 
         #region Draw GameState
-        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch, GameState gameState)
+        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            switch (gameState.GameStateValue)
+            switch (_gameState.GameStateValue)
             {
                 case GameStates.STARTSCREEN:
                     _startScreen.Draw(gameTime, _spriteBatch);
@@ -107,6 +108,7 @@ namespace gamedevproject.GameStateClasses
                 case GameStates.GAMEOVER:
                     _gameOverScreen.Draw(gameTime, _spriteBatch);
                     break;
+
                 default:
                     break;
             }
