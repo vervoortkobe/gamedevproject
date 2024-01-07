@@ -44,7 +44,7 @@ namespace gamedevproject
 
             _gsman = new GameStateManager(Services, Content, _spriteBatch);
             _gameState = new GameState();
-            _gameState.GameStateValue = GameStates.VICTORY;
+            _gameState.GameStateValue = GameStates.STARTSCREEN;
         }
 
         protected override void Update(GameTime gameTime)

@@ -28,10 +28,10 @@ namespace gamedevproject.ScreenClasses
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
                 _gameState.GameStateValue = GameStates.LEVEL1;
+
+            if(_gameState.GameStateValue == GameStates.LEVEL1)
                 _gsman.Update(gameTime, _spriteBatch, _gameState);
-            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
@@ -40,12 +40,8 @@ namespace gamedevproject.ScreenClasses
 
             _spriteBatch.Draw(_text, new Vector2(5, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.27f, 0.25f), SpriteEffects.None, 0f);
 
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
+            if (_gameState.GameStateValue == GameStates.LEVEL1)
                 _gsman.Draw(gameTime, _spriteBatch, _gameState);
-            }
         }
 
         public void Unload()
