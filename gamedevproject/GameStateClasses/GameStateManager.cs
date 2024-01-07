@@ -63,15 +63,19 @@ namespace gamedevproject.GameStateClasses
                     _level1.Update(gameTime);
                     break;
                 case GameStates.LEVEL2:
+                    _level1.Unload();
                     _level2.Update(gameTime);
                     break;
                 case GameStates.LEVEL3:
+                    _level2.Unload();
                     _level3.Update(gameTime);
                     break;
                 case GameStates.VICTORY:
+                    _level3.Unload();
                     _victoryScreen.Update(gameTime);
                     break;
-                case GameStates.GAMEOVER: 
+                case GameStates.GAMEOVER:
+                    _level3.Unload();
                     _gameOverScreen.Update(gameTime);
                     break;
                 default:

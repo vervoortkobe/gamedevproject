@@ -156,6 +156,11 @@ namespace gamedevproject.LevelClasses
             player.Draw(spriteBatch);
         }
 
+        public void Unload()
+        {
+            Dispose();
+        }
+
         private void DrawTiles(SpriteBatch spriteBatch)
         {
             // For each tile position
