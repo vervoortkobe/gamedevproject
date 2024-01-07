@@ -1,5 +1,4 @@
-﻿using gamedevproject.Interfaces;
-using gamedevproject.LevelClasses;
+﻿using gamedevproject.LevelClasses;
 using gamedevproject.ScreenClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
