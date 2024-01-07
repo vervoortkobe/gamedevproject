@@ -1,5 +1,6 @@
 ﻿using gamedevproject.GameStateClasses;
 using gamedevproject.Interfaces;
+using gamedevproject.LevelObjects;
 using gamedevproject.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -13,17 +14,18 @@ namespace gamedevproject.LevelClasses
     internal class Level: IDisposable
     {
         #region Properties
-
         private LevelTile[,] tiles;
         private Rectangle[,] colliders { get; set; }
-
-        private Texture2D[] layers;
-        private const int EntityLayer = 2;
 
         public Player Player { get { return player; } }
         private Player player;
 
+        public Enemy Enemy { get { return enemy; } }
+        private Enemy enemy;
+
         private Vector2 start;
+        private Vector2 spawn;
+        private Vector2 end;
 
         public ContentManager Content { get { return content; } }
         private ContentManager content;
@@ -33,12 +35,10 @@ namespace gamedevproject.LevelClasses
         private Texture2D background_level1;
         private Texture2D background_level2;
         private Texture2D background_level3;
-
         #endregion
 
         #region Loading
-
-        public Level(IServiceProvider service, Stream filestream, int levelIndex, GameState gameState)
+        public Level(IServiceProvider service, Stream filestream, GameState gameState)
         {
             content = new ContentManager(service, "Content");
 
@@ -92,6 +92,10 @@ namespace gamedevproject.LevelClasses
                     return new LevelTile(null, TileCollision.Passable);
                 case '1':
                     return LoadStartTile(x, y);
+                case '2':
+                    return LoadSpawnTile(x, y);
+                case '3':
+                    return LoadEndTile(x, y);
                 case '#':
                     return LoadSpecificTile("Block1", 7, TileCollision.Impassable);
                 default:
@@ -113,6 +117,20 @@ namespace gamedevproject.LevelClasses
             return new LevelTile(null, TileCollision.Passable);
         }
 
+        private LevelTile LoadSpawnTile(int x, int y)
+        {
+            if (Enemy != null)
+                throw new NotSupportedException("A level may only have one enemy point");
+
+            Rectangle rect = GetBounds(x, y);
+
+            spawn = new Vector2(rect.X, rect.Top);
+
+            enemy = new Enemy(this, spawn);
+
+            return new LevelTile(null, TileCollision.Passable);
+        }
+
         private LevelTile LoadTileFromContent(string name, TileCollision collision)
         {
             return new LevelTile(Content.Load<Texture2D>("Sprites/" + name), collision);
@@ -127,11 +145,9 @@ namespace gamedevproject.LevelClasses
         {
             Content.Unload();
         }
-
         #endregion
 
         #region Bounds and collision
-
         public TileCollision GetCollision(int x, int y)
         {
             if (x < 0 || x >= Width)
@@ -184,7 +200,6 @@ namespace gamedevproject.LevelClasses
         {
             get { return tiles.GetLength(1); }
         }
-
         #endregion
 
         public void Update(GameTime gameTime)

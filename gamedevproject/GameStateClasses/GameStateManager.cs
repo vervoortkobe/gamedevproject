@@ -34,13 +34,13 @@ namespace gamedevproject.GameStateClasses
             _startScreen = new StartScreen(Content, this, _gameState, _spriteBatch);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
-                _level1 = new Level(Services, fileStream, 1, _gameState);
+                _level1 = new Level(Services, fileStream, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 2)))
-                _level2 = new Level(Services, fileStream, 1, _gameState);
+                _level2 = new Level(Services, fileStream, _gameState);
 
             using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
-                _level3 = new Level(Services, fileStream, 1, _gameState);
+                _level3 = new Level(Services, fileStream, _gameState);
 
             _victoryScreen = new VictoryScreen(Content, this, _gameState, _spriteBatch);
 
