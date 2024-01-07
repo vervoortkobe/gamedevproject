@@ -51,16 +51,6 @@ namespace gamedevproject
             //Add GameButtons for Pausing / Exit / Restart Level
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.R))
-            {
-                // Restart();
-            }
-            else if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.P))
-            {
-                // Pause();
-            }
 
             _gsman.Update(gameTime, _spriteBatch);
             
