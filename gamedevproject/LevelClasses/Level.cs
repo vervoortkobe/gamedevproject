@@ -3,9 +3,14 @@ using gamedevproject.ScreenClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct2D1.Effects;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace gamedevproject.LevelClasses
 {
@@ -14,6 +19,8 @@ namespace gamedevproject.LevelClasses
         #region Properties
 
         private LevelTile[,] tiles;
+        private Rectangle[,] colliders { get; set; }
+
         private Texture2D[] layers;
         private const int EntityLayer = 2;
 
@@ -57,12 +64,15 @@ namespace gamedevproject.LevelClasses
 
             tiles = new LevelTile[width, lines.Count];
 
+            colliders = new Rectangle[tiles.GetLength(0), tiles.GetLength(1)];
+
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)
                 {
                     char tileType = lines[y][x];
                     tiles[x, y] = LoadTile(tileType, x, y);
+                    colliders[x, y] = new(x * LevelTile.Width, y * LevelTile.Height, LevelTile.Width, LevelTile.Height);
                 }
             }
         }
@@ -89,7 +99,7 @@ namespace gamedevproject.LevelClasses
 
             Rectangle rect = GetBounds(x, y);
 
-            start = new Vector2(rect.X + rect.Width / 2.0f, rect.Bottom);
+            start = new Vector2(rect.X, rect.Top);
 
             player = new Player(this, start);
 
@@ -126,7 +136,35 @@ namespace gamedevproject.LevelClasses
 
             return tiles[x, y].Collision;
         }
-     
+
+        public List<Rectangle> GetNearestColliders(Rectangle bounds)
+        {
+            int leftTile = (int)Math.Floor((float)bounds.Left / LevelTile.Width)-1;
+            int rightTile = (int)Math.Ceiling((float)bounds.Right / LevelTile.Width);
+            int topTile = (int)Math.Floor((float)bounds.Top / LevelTile.Height)-1;
+            int bottomTile = (int)Math.Ceiling((float)bounds.Bottom / LevelTile.Height);
+
+            leftTile = MathHelper.Clamp(leftTile, 0, tiles.GetLength(1)-1);
+            rightTile = MathHelper.Clamp(rightTile, 0, tiles.GetLength(1)-1);
+            topTile = MathHelper.Clamp(topTile, 0, tiles.GetLength(0)-1);
+            bottomTile = MathHelper.Clamp(bottomTile, 0, tiles.GetLength(0)-1);
+
+            List<Rectangle> result = new();
+
+            for (int x = topTile; x <= bottomTile; x++)
+            {
+                for (int y = leftTile; y <= rightTile; y++)
+                {
+                    if (tiles[y,x].Collision != TileCollision.Passable) 
+                    {
+                        result.Add(colliders[y,x]);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public Rectangle GetBounds(int x, int y)
         {
             return new Rectangle(x * LevelTile.Width, y * LevelTile.Height, LevelTile.Width, LevelTile.Height);
@@ -179,5 +217,6 @@ namespace gamedevproject.LevelClasses
                 }
             }
         }
+
     }
 }

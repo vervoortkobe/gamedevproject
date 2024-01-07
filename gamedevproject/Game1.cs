@@ -4,6 +4,7 @@ using gamedevproject.LevelClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace gamedevproject
 {
@@ -30,8 +31,6 @@ namespace gamedevproject
 
         protected override void Initialize()
         {
-            // ONDERZOEKEN WAT DIT DOET ?!
-
             // TODO: Add your initialization logic here
             base.Initialize();
         }

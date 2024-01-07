@@ -5,7 +5,7 @@ namespace gamedevproject.Interfaces
 {
     internal interface IGameObject
     {
-        public Rectangle Bounds { get; set; }
+        public Rectangle Bounds { get; }
 
         void Update(GameTime gameTime);
 

@@ -22,9 +22,17 @@ namespace gamedevproject.PlayerClasses
         public Vector2 Position { get; set; }
         public Vector2 NewPosition { get; set; }
         public Vector2 Direction { get; set; }
-        public Rectangle Bounds { get; set; }
-        public Vector2 Speed { get; set; }
-        public bool IsOnGround { get; set; } = true;
+        public Rectangle Bounds 
+        { 
+            get 
+            {
+                int left = (int)Math.Round(Position.X);
+                int top = (int)Math.Round(Position.Y);
+                return new Rectangle(left, top, 48, 48);
+            } 
+        }
+        public float Speed { get; set; }
+        public bool IsOnGround { get; set; }
         public bool IsAlive { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
@@ -47,19 +55,17 @@ namespace gamedevproject.PlayerClasses
             playerTexture = level.Content.Load<Texture2D>("Sprites/PlayerSheet");
             animation = new Animation();
 
-            //Managers & Readers
             InputReader = new KeyboardReader();
-            MovementManager = new MovementManager();
-            //Animation is assigned and updated inside the StateManager
+            MovementManager = new MovementManager(level);
+            
             StateManager = new StateManager(this);
         }
 
         public void ResetToStart(Vector2 position)
         {
             Position = position;
-            Direction = Vector2.Zero;
             IsAlive = true;
-            // Implement: set state to idle 
+            IsOnGround = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -69,14 +75,13 @@ namespace gamedevproject.PlayerClasses
 
         public void Update(GameTime gameTime)
         {
-            Move();
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, 48, 48);
             animation.Update(gameTime);
+            Move(gameTime);
         }
 
-        private void Move()
+        private void Move(GameTime gameTime)
         {
-            MovementManager.Move(this);
+            MovementManager.Move(this, level, gameTime);
         }
     }
 }

@@ -5,16 +5,24 @@ using gamedevproject.PlayerClasses;
 using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace gamedevproject.LevelObjects
 {
-    internal class Enemy : IMovable, IGameObject
+    internal class Enemy : IGameObject
     {
         Animation animation;
 
         Player Player;
 
         Texture2D enemyTexture;
+
+        LevelClasses.Level level;
 
         public int DistanceTraveled { get; set; }
         public int MaxDistance { get; set; }
@@ -36,7 +44,7 @@ namespace gamedevproject.LevelObjects
             Player = player;
 
             //Managers
-            MovementManager = new MovementManager();
+            MovementManager = new MovementManager(level);
 
             IsOnGround = false;
             Position = new Vector2(720, 720 - 84);

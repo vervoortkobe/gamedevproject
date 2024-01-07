@@ -1,59 +1,107 @@
 ﻿using gamedevproject.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
+using SharpDX.MediaFoundation;
+using gamedevproject.LevelClasses;
+using SharpDX.Direct2D1.Effects;
 
 namespace gamedevproject.MovementClasses
 {
     class MovementManager
     {
 
-        public Vector2 Gravity = new Vector2(0, 0.5f);
+        public float Gravity = 1250f;
 
-        public void Move(IMovable movable)
+        Level level;
+
+        public MovementManager(Level level)
         {
-            //Todo: Add gravity to player class or maybe game class?
+            this.level = level;
+        }
 
-            var input = movable.InputReader.ReadInput();
+        public void Move(IMovable player, Level level, GameTime gameTime)
+        {
 
-            movable.StateManager.CurrentState.HandleInput(input);
+            var input = player.InputReader.ReadInput();
+            
+            player.StateManager.CurrentState.HandleInput(input);
 
-            Vector2 prevPosition = movable.Position;
+            float velocityX = player.Direction.X;
+            float velocityY = player.Direction.Y;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // X-axis Movement
 
             if (input == Keys.None)
             {
-                movable.Direction = new Vector2(0, movable.Direction.Y);
+                velocityX = 0;
             }
 
             if (input == Keys.Right)
             {
-                movable.SpriteEffects = SpriteEffects.None;
-                movable.Direction = new Vector2(1, movable.Direction.Y);
+                player.SpriteEffects = SpriteEffects.None;
+                velocityX += 350.0f * deltaTime;
             }
 
             if (input == Keys.Left)
             {
-                movable.SpriteEffects = SpriteEffects.FlipHorizontally;
-                movable.Direction = new Vector2(-1, movable.Direction.Y);
+                player.SpriteEffects = SpriteEffects.FlipHorizontally;
+                velocityX += -350.0f * deltaTime;
             }
 
-            movable.Position += movable.Direction;
-
-            // Y-axis Movement
-
-            if (!movable.IsOnGround)
+            velocityY += Gravity * deltaTime; 
+            
+            if (input == Keys.Space && player.IsOnGround)
             {
-                movable.Direction += Gravity;
+                velocityY = -500.0f;
             }
 
-            if (input == Keys.Space && movable.IsOnGround)
+            player.Direction = new Vector2(velocityX, velocityY);
+
+            UpdatePosition(level, player, gameTime);
+            
+        }
+
+        public void UpdatePosition(Level level, IMovable player, GameTime gameTime)
+        {
+            player.IsOnGround = false;
+
+            var newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y,48,48);
+
+            foreach (var collider in level.GetNearestColliders(newBounds))
             {
-                movable.Direction = new Vector2(movable.Direction.X, -10);
-            }
+                if (newPosition.X != player.Position.X)
+                {
+                    newBounds = new Rectangle((int)newPosition.X, (int)player.Position.Y,48,48);
+                    if (newBounds.Intersects(collider))
+                    {
+                        if (newPosition.X > player.Position.X) newPosition.X = collider.Left - 48;
+                        else newPosition.X = collider.Right;
+                        continue;
+                    }
+                }
 
-            movable.Direction.Normalize();
+                newBounds = new Rectangle((int)player.Position.X, (int)newPosition.Y,48,48);
+                if (newBounds.Intersects(collider))
+                {
+                    if (player.Direction.Y > 0)
+                    {
+                        newPosition.Y = collider.Top - 48;
+                        player.IsOnGround = true;
+                        player.Direction = new Vector2(player.Direction.X, 0);
+                    }
+                    else
+                    {
+                        newPosition.Y = collider.Bottom;
+                        player.Direction = new Vector2(player.Direction.X, 0);
+                    }
+                }
+            }
+            player.Position = newPosition;
         }
     }
 }
