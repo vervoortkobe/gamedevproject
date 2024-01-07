@@ -1,16 +1,8 @@
-﻿using gamedevproject.AnimationClasses;
-using gamedevproject.HelperClasses;
-using gamedevproject.InputClasses;
-using gamedevproject.Interfaces;
-using gamedevproject.LevelClasses;
-using gamedevproject.LevelObjects;
-using gamedevproject.PlayerClasses;
+﻿using gamedevproject.LevelClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Versioning;
 
 namespace gamedevproject
 {
@@ -35,8 +27,6 @@ namespace gamedevproject
 
         protected override void Initialize()
         {
-            // ONDERZOEKEN WAT DIT DOET ?!
-
             // TODO: Add your initialization logic here
             base.Initialize();
         }

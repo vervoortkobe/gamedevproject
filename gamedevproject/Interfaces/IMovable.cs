@@ -13,8 +13,6 @@ namespace gamedevproject.Interfaces
     internal interface IMovable
     {
         public Vector2 Position { get; set; }
-        public Vector2 NewPosition { get; set; }
-        public float previousBottom { get; set; }
         public Vector2 Direction { get; set; }
         public float Speed { get; set; }
         public Rectangle Bounds { get; }

@@ -23,7 +23,6 @@ namespace gamedevproject.MovementClasses
 
         public void Move(IMovable player, Level level, GameTime gameTime)
         {
-            //Todo: Add gravity to player class or maybe game class?
 
             var input = player.InputReader.ReadInput();
             
@@ -33,8 +32,6 @@ namespace gamedevproject.MovementClasses
             float velocityY = player.Direction.Y;
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            // X-axis Movement
 
             if (input == Keys.None)
             {
@@ -53,12 +50,8 @@ namespace gamedevproject.MovementClasses
                 velocityX += -350.0f * deltaTime;
             }
 
-            //Gravity working on the player
-            if (!player.IsOnGround) 
-            { 
-                velocityY += Gravity * deltaTime; 
-            }
-
+            velocityY += Gravity * deltaTime; 
+            
             if (input == Keys.Space && player.IsOnGround)
             {
                 velocityY = -500.0f;
@@ -72,16 +65,12 @@ namespace gamedevproject.MovementClasses
 
         public void UpdatePosition(Level level, IMovable player, GameTime gameTime)
         {
-            //Reset OnGround Check
             player.IsOnGround = false;
 
-            //Calculate new position
             var newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //Calculate new Bounds according to the new position
             Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y,48,48);
 
-            //Iterate through the list and offset the player position outside the collider
             foreach (var collider in level.GetNearestColliders(newBounds))
             {
                 if (newPosition.X != player.Position.X)

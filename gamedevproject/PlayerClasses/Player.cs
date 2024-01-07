@@ -26,8 +26,6 @@ namespace gamedevproject.PlayerClasses
         Level level;
         
         public Vector2 Position { get; set; }
-        public Vector2 NewPosition { get; set; }
-        public float previousBottom { get; set; }
         public Vector2 Direction { get; set; }
         public Rectangle Bounds 
         { 
@@ -62,10 +60,9 @@ namespace gamedevproject.PlayerClasses
             playerTexture = level.Content.Load<Texture2D>("Sprites/PlayerSheet");
             animation = new Animation();
 
-            //Managers & Readers
             InputReader = new KeyboardReader();
             MovementManager = new MovementManager(level);
-            //Animation is assigned and updated inside the StateManager
+            
             StateManager = new StateManager(this);
         }
 
@@ -74,7 +71,6 @@ namespace gamedevproject.PlayerClasses
             Position = position;
             IsAlive = true;
             IsOnGround = true;
-            // Implement: set state to idle 
         }
 
         public void Draw(SpriteBatch spriteBatch)
