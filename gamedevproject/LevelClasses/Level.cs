@@ -32,23 +32,13 @@ namespace gamedevproject.LevelClasses
         public ContentManager Content { get { return content; } }
         private ContentManager content;
 
-        private GameState _gameState;
-
-        private Texture2D background_level1;
-        private Texture2D background_level2;
-        private Texture2D background_level3;
+        public Texture2D Background { get; set; }
         #endregion
 
         #region Loading
-        public Level(IServiceProvider service, Stream filestream, GameState gameState)
+        public Level(IServiceProvider service, Stream filestream)
         {
             content = new ContentManager(service, "Content");
-
-            _gameState = gameState;
-
-            background_level1 = Content.Load<Texture2D>("Backgrounds/city3");
-            background_level2 = Content.Load<Texture2D>("Backgrounds/forest");
-            background_level3 = Content.Load<Texture2D>("Backgrounds/clouds2");
 
             LoadTiles(filestream);
         }
@@ -225,22 +215,30 @@ namespace gamedevproject.LevelClasses
         public void Update(GameTime gameTime)
         {
             player.Update(gameTime);
-            foreach (var enemy in Enemies)
+
+            if(Enemies != null)
             {
-                enemy.Update(gameTime);
+                foreach (var enemy in Enemies)
+                {
+                    enemy.Update(gameTime);
+                }
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            DrawBackground(spriteBatch);
+            spriteBatch.Draw(Background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
             DrawTiles(spriteBatch);
             player.Draw(spriteBatch);
-
-            foreach (var enemy in Enemies)
+            if (Enemies != null)
             {
-                enemy.Draw(spriteBatch);
+                foreach (var enemy in Enemies)
+            
+                {
+                    enemy.Draw(spriteBatch);
+                }
             }
+            
         }
 
         public void Unload()
@@ -250,43 +248,18 @@ namespace gamedevproject.LevelClasses
 
         private void DrawTiles(SpriteBatch spriteBatch)
         {
-            // For each tile position
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    // If there is a visible tile in that position
                     Texture2D texture = tiles[x, y].Texture;
                     if (texture != null)
                     {
-                        // Draw it in screen space.
                         Vector2 position = new Vector2(x, y) * LevelTile.Size;
                         spriteBatch.Draw(texture, position, Color.White);
                     }
                 }
             }
-        }
-
-        private void DrawBackground(SpriteBatch spriteBatch)
-        {
-            Texture2D background = null;
-            switch (_gameState.GameStateValue)
-            {
-                case GameStates.LEVEL1:
-                    background = background_level1;
-                    break;
-                case GameStates.LEVEL2:
-                    background = background_level2;
-                    break;
-                case GameStates.LEVEL3:
-                    background = background_level3;
-                    break;
-
-                default:
-                    break;
-            }
-
-            spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
         }
     }
 }

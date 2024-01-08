@@ -31,7 +31,7 @@ namespace gamedevproject.ScreenClasses
                 _gameState.GameStateValue = GameStates.STARTSCREEN;
 
             if (_gameState.GameStateValue == GameStates.STARTSCREEN)
-                _gsman.Update(gameTime, _spriteBatch);
+                _gsman.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
@@ -41,7 +41,7 @@ namespace gamedevproject.ScreenClasses
             _spriteBatch.Draw(_text, new Vector2(5, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.25f, 0.25f), SpriteEffects.None, 0f);
 
             if (_gameState.GameStateValue == GameStates.STARTSCREEN)
-                _gsman.Draw(gameTime, _spriteBatch);
+                _gsman.Draw(_spriteBatch);
         }
 
         public void Unload()

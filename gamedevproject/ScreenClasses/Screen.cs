@@ -89,7 +89,7 @@ namespace gamedevproject.ScreenClasses
             }
 
             if (_gameState.GameStateValue == _nextGameState)
-                _gsman.Update(gameTime, _spriteBatch);
+                _gsman.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
@@ -112,7 +112,7 @@ namespace gamedevproject.ScreenClasses
             }
 
             if (_gameState.GameStateValue == _nextGameState)
-                _gsman.Draw(gameTime, _spriteBatch);
+                _gsman.Draw(_spriteBatch);
         }
 
         private void DrawScreen(Texture2D background, Texture2D text, float scaleY)

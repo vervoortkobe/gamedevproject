@@ -28,19 +28,13 @@ namespace gamedevproject
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-
-            _gameState = new GameState();
-            _gameState.GameStateValue = GameStates.STARTSCREEN;
-            _gsman = new GameStateManager(Services, Content, _spriteBatch, _gameState);
+            _gsman = new GameStateManager(this);
         }
 
         protected override void Update(GameTime gameTime)
@@ -49,7 +43,23 @@ namespace gamedevproject
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            _gsman.Update(gameTime, _spriteBatch);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && _gsman.CurrentGameState is StartState)
+            {
+                _gsman.SetGameState(GameStates.LEVEL1);
+            }
+
+            if(Keyboard.GetState().IsKeyDown(Keys.O) && _gsman.CurrentGameState is StartState)
+            {
+                _gsman.SetGameState(GameStates.LEVEL2);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && _gsman.CurrentGameState is StartState)
+            {
+                _gsman.SetGameState(GameStates.LEVEL3);
+            }
+
+            _gsman.CurrentGameState.Update(gameTime);
             
             base.Update(gameTime);
         }
@@ -60,7 +70,7 @@ namespace gamedevproject
 
             _spriteBatch.Begin();
 
-            _gsman.Draw(gameTime, _spriteBatch);
+            _gsman.CurrentGameState.Draw(_spriteBatch);
 
             _spriteBatch.End();
 

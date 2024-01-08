@@ -128,7 +128,7 @@ namespace gamedevproject.LevelObjects
             }
 
             //Set max speed along the X-axis left and right
-            MathHelper.Clamp(velocityX, -5f, 5f);
+            MathHelper.Clamp(velocityX, -0.5f, 0.5f);
 
             velocityY += level.Gravity * deltaTime;
 
