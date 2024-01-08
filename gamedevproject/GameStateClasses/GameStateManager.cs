@@ -26,43 +26,25 @@ namespace gamedevproject.GameStateClasses
         #region Loading
         public GameStateManager(Game game)
         {
-            //_gameState = gameState;
-            //_spriteBatch = spriteBatch;
-
-            //_startScreen = new StartScreen(Content, this, _gameState, _spriteBatch);
-
-            //using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))
-            //    _level1 = new Level(Services, fileStream, _gameState);
-
-            //using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 2)))
-            //    _level2 = new Level(Services, fileStream, _gameState);
-
-            //using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 3)))
-            //    _level3 = new Level(Services, fileStream, _gameState);
-
-            //_victoryScreen = new VictoryScreen(Content, this, _gameState, _spriteBatch);
-
-            //_gameOverScreen = new GameOverScreen(Content, this, _gameState, _spriteBatch);
-
             this.Game = game;
 
             GameStates = new List<GameState>
             {
                 new StartState(Game),
-                new LevelState(Game),
-                new LevelState(Game),
-                new LevelState(Game),
+                new LevelState(Game,GameStateClasses.GameStates.LEVEL1),
+                new LevelState(Game,GameStateClasses.GameStates.LEVEL2),
+                new LevelState(Game,GameStateClasses.GameStates.LEVEL3),
             };
 
             CurrentGameState = GameStates[0];
-            CurrentGameState.Enter(GameStateClasses.GameStates.STARTSCREEN);
+            CurrentGameState.Enter();
         }
         #endregion
 
         public void SetGameState(GameStates state)
         {
             CurrentGameState = GameStates[(int)state];
-            CurrentGameState.Enter(state);
+            CurrentGameState.Enter();
         }
 
         #region Update GameState
@@ -78,5 +60,14 @@ namespace gamedevproject.GameStateClasses
             CurrentGameState.Draw(_spriteBatch);
         }
         #endregion
+
+        public bool IsLevelCompleted()
+        {
+            if(CurrentGameState.State == GameStateClasses.GameStates.LEVEL1){
+                return CurrentGameState.Level.Player.HasReachedExit;
+            }
+            else
+               return false;
+        }
     }
 }

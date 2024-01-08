@@ -76,6 +76,10 @@ namespace gamedevproject.PlayerClasses
 
         public void Update(GameTime gameTime)
         {
+            if (level.end)
+            {
+                HasReachedExit = true;
+            }
             animation.Update(gameTime);
             Move(gameTime);
         }

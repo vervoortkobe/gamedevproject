@@ -27,7 +27,7 @@ namespace gamedevproject.LevelClasses
 
         private Vector2 start;
         private Vector2 spawn;
-        private Vector2 end;
+        private Point end;
 
         public ContentManager Content { get { return content; } }
         private ContentManager content;
@@ -134,11 +134,9 @@ namespace gamedevproject.LevelClasses
             if (Player != null)
                 throw new NotSupportedException("A level may only have one end point.");
 
-            Rectangle rect = GetBounds(x, y);
+            end = GetBounds(x, y).Center;
 
-            end = new Vector2(rect.X, rect.Top);
-
-            return new LevelTile(Content.Load<Texture2D>("Sprites/exitdoor"), TileCollision.Passable);
+            return new LevelTile(Content.Load<Texture2D>("Sprites/exitdoor"), TileCollision.Exit);
         }
 
         private LevelTile LoadTileFromContent(string name, TileCollision collision)
@@ -186,7 +184,7 @@ namespace gamedevproject.LevelClasses
             {
                 for (int y = leftTile; y <= rightTile; y++)
                 {
-                    if (tiles[y,x].Collision != TileCollision.Passable) 
+                    if (tiles[y,x].Collision == TileCollision.Impassable) 
                     {
                         result.Add(colliders[y,x]);
                     }

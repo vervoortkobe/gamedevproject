@@ -12,10 +12,7 @@ namespace gamedevproject.LevelClasses
     {
         Passable,
         Impassable,
-        Platform,
-        OneWayLeft,
-        OneWayRight,
-        InversePlatform
+        Exit
     }
 
     internal class LevelTile

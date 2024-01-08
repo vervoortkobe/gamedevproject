@@ -13,11 +13,10 @@ namespace gamedevproject.GameStateClasses
 {
     internal class LevelState : GameState
     {
-        public Level Level { get; set; }
-
-        public LevelState(Game game)
+        public LevelState(Game game, GameStates state)
         {
             this.Game = game;
+            this.State = state;
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
@@ -25,10 +24,10 @@ namespace gamedevproject.GameStateClasses
             Level.Draw(_spriteBatch);
         }
 
-        public override void Enter(GameStates state)
+        public override void Enter()
         {
             Game.Content.Unload();
-            switch (state)
+            switch (State)
             {
                 case GameStates.LEVEL1:
                     using (Stream fileStream = TitleContainer.OpenStream(string.Format("Content/Levels/Level{0}.txt", 1)))

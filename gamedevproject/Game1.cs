@@ -9,8 +9,6 @@ namespace gamedevproject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
-        private GameState _gameState;
         private GameStateManager _gsman;
 
         public Game1()
@@ -43,18 +41,17 @@ namespace gamedevproject
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && _gsman.CurrentGameState is StartState)
             {
                 _gsman.SetGameState(GameStates.LEVEL1);
             }
 
-            if(Keyboard.GetState().IsKeyDown(Keys.O) && _gsman.CurrentGameState is StartState)
+            if (_gsman.IsLevelCompleted())
             {
                 _gsman.SetGameState(GameStates.LEVEL2);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.P) && _gsman.CurrentGameState is StartState)
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
                 _gsman.SetGameState(GameStates.LEVEL3);
             }

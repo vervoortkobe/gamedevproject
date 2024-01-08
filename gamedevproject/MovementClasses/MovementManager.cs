@@ -6,6 +6,7 @@ using SharpDX.MediaFoundation;
 using gamedevproject.LevelClasses;
 using SharpDX.Direct2D1.Effects;
 using Microsoft.Xna.Framework.Input;
+using gamedevproject.PlayerClasses;
 
 namespace gamedevproject.MovementClasses
 {
@@ -68,7 +69,7 @@ namespace gamedevproject.MovementClasses
         {
             player.IsOnGround = false;
 
-            var newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y,48,48);
 

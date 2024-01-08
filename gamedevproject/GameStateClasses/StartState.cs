@@ -15,8 +15,9 @@ namespace gamedevproject.GameStateClasses
         public StartState(Game game)
         {
             this.Game = game;
+            this.State = GameStates.STARTSCREEN;
         }
-        public override void Enter(GameStates state)
+        public override void Enter()
         {
             Game.Content.Unload();
             this.Texture = Game.Content.Load<Texture2D>("Backgrounds/startscreen2");
