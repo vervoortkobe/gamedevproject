@@ -57,7 +57,17 @@ namespace gamedevproject
                 _gsman.SetGameState(_gsman.CurrentGameState.State + 1);
             }
 
-            if(_gsman.CurrentGameState.State == GameStates.VICTORY && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            if (_gsman.HasPlayerDied())
+            {
+                _gsman.SetGameState(GameStates.GAMEOVER);
+            }
+
+            if (_gsman.CurrentGameState.State == GameStates.GAMEOVER && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                _gsman.SetGameState(GameStates.STARTSCREEN);
+            }
+
+            if (_gsman.CurrentGameState.State == GameStates.VICTORY && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 Exit();
             }

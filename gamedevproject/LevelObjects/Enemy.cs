@@ -36,7 +36,7 @@ namespace gamedevproject.LevelObjects
             {
                 int left = (int)Math.Round(Position.X);
                 int top = (int)Math.Round(Position.Y);
-                return new Rectangle(left, top, 48, 48);
+                return new Rectangle(left + 12, top, 24, 24);
             }
         }
         public SpriteEffects SpriteEffects { get; set; }

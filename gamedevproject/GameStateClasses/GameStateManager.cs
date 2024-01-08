@@ -72,5 +72,15 @@ namespace gamedevproject.GameStateClasses
             else
                return false;
         }
+
+        public bool HasPlayerDied()
+        {
+            if (CurrentGameState.Level != null)
+            {
+                return CurrentGameState.Level.HasDied;
+            }
+            else
+                return false;
+        }
     }
 }

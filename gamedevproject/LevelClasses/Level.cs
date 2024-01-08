@@ -35,6 +35,8 @@ namespace gamedevproject.LevelClasses
         private Vector2 spawn;
         
         private Point end;
+
+        public bool HasDied { get; set; }
         
         public bool ReachedExit { get; set; }
 
@@ -243,15 +245,25 @@ namespace gamedevproject.LevelClasses
                 foreach (var enemy in Enemies)
                 {
                     enemy.Update(gameTime);
+
+                    if (enemy.Bounds.Intersects(Player.Bounds))
+                    {
+                        HasDied = true;
+                    }
+
                 }
+
+            }
+
+            if (Coins != null)
+            {
+                UpdateCoins(gameTime);
             }
 
             if (player.Bounds.Contains(end))
             {
                 ReachedExit = true;
             }
-
-            UpdateCoins(gameTime);
         }
 
         private void UpdateCoins(GameTime gameTime)

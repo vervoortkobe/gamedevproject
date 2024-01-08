@@ -18,8 +18,16 @@ namespace gamedevproject.LevelObjects
         public Level Level { get; private set; }
 
         public Vector2 Position { get; set; }
-        
-        public Rectangle Bounds { get; set; }
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                int left = (int)Math.Round(Position.X);
+                int top = (int)Math.Round(Position.Y);
+                return new Rectangle(left, top, 48, 48);
+            }
+        }
 
         public Coin(Level level, Vector2 position)
         {
