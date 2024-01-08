@@ -3,6 +3,7 @@ using gamedevproject.InputClasses;
 using gamedevproject.Interfaces;
 using gamedevproject.LevelClasses;
 using gamedevproject.MovementClasses;
+using gamedevproject.PlayerClasses;
 using gamedevproject.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -106,24 +107,33 @@ namespace gamedevproject.LevelObjects
 
         public void Move(GameTime gameTime)
         {
-            Position += Direction * Speed;
+            float velocityX = Direction.X;
+            float velocityY = Direction.Y;
 
-            if(Position.X < level.Player.Position.X)
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Position.X < level.Player.Position.X)
             {
-                Direction = new Vector2(1, Direction.Y);
                 SpriteEffects = SpriteEffects.None;
+                velocityX += 200f * deltaTime;
             }
             if (Position.X > level.Player.Position.X)
             {
-                Direction = new Vector2(-1, Direction.Y);
                 SpriteEffects = SpriteEffects.FlipHorizontally;
+                velocityX += -200f * deltaTime;
             }
             if (Position.X == level.Player.Position.X)
             {
-                Direction = new Vector2(0, Direction.Y);
+                velocityX = 0;
             }
 
-            //CollisionCheck implementeren
+            //Set max speed along the X-axis left and right
+            MathHelper.Clamp(velocityX, -5f, 5f);
+
+            velocityY += level.Gravity * deltaTime;
+
+            Direction = new Vector2(velocityX, velocityY);
+
             MovementManager.UpdatePosition(level, this, gameTime);
 
         }

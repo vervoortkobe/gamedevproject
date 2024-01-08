@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
 
 namespace gamedevproject.LevelClasses
 {
@@ -21,6 +22,8 @@ namespace gamedevproject.LevelClasses
 
         public List<Enemy> Enemies { get { return enemies; } }
         private List<Enemy> enemies;
+
+        public float Gravity = 1250f;
 
         private Vector2 start;
         private Vector2 spawn;
@@ -145,7 +148,7 @@ namespace gamedevproject.LevelClasses
 
             end = new Vector2(rect.X, rect.Top);
 
-            return new LevelTile(null, TileCollision.Passable);
+            return new LevelTile(Content.Load<Texture2D>("Sprites/exitdoor"), TileCollision.Passable);
         }
 
         private LevelTile LoadTileFromContent(string name, TileCollision collision)

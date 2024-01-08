@@ -12,8 +12,6 @@ namespace gamedevproject.MovementClasses
     class MovementManager
     {
 
-        public float Gravity = 1250f;
-
         Level level;
 
         public MovementManager(Level level)
@@ -52,12 +50,14 @@ namespace gamedevproject.MovementClasses
                 velocityX += -350.0f * deltaTime;
             }
 
-            velocityY += Gravity * deltaTime; 
+            velocityY += level.Gravity * deltaTime; 
             
             if (input == Keys.Space && player.IsOnGround)
             {
-                velocityY = -500.0f;
+                velocityY = -550.0f;
             }
+
+            MathHelper.Clamp(velocityX, -5f, 5f);
 
             player.Direction = new Vector2(velocityX, velocityY);
 

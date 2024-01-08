@@ -34,7 +34,7 @@ namespace gamedevproject.PlayerClasses
         }
         public float Speed { get; set; }
         public bool IsOnGround { get; set; }
-        public bool IsAlive { get; set; }
+        public bool HasReachedExit { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
@@ -65,8 +65,8 @@ namespace gamedevproject.PlayerClasses
         public void ResetToStart(Vector2 position)
         {
             Position = position;
-            IsAlive = true;
             IsOnGround = true;
+            HasReachedExit = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
