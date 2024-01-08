@@ -238,6 +238,13 @@
 #begin Levels/Level3.txt
 /copy:Levels/Level3.txt
 
+#begin ScoreFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:ScoreFont.spritefont
+
 #begin Sprites/Block1.png
 /importer:TextureImporter
 /processor:TextureProcessor

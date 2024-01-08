@@ -27,6 +27,7 @@ namespace gamedevproject.LevelClasses
         private List<Coin> coins;
 
         private int score = 0;
+        private SpriteFont spriteFont;
 
         public float Gravity = 1250f;
 
@@ -50,6 +51,8 @@ namespace gamedevproject.LevelClasses
         public Level(IServiceProvider service, Stream filestream)
         {
             content = new ContentManager(service, "Content");
+
+            spriteFont = Content.Load<SpriteFont>("ScoreFont");
 
             LoadTiles(filestream);
         }
@@ -304,6 +307,18 @@ namespace gamedevproject.LevelClasses
             }
             player.Draw(spriteBatch);
 
+            DrawCoinCount(spriteBatch);
+
+        }
+
+        private void DrawCoinCount(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(
+                spriteFont,
+                "Coins: " + score,
+                new Vector2(48, 48),
+                Color.White
+            );
         }
 
         public void Unload()
