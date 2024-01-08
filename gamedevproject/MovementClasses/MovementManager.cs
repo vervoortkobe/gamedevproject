@@ -14,6 +14,7 @@ namespace gamedevproject.MovementClasses
     {
 
         Level level;
+        float BouncinessFactor = 0.7f;
 
         public MovementManager(Level level)
         {
@@ -64,45 +65,47 @@ namespace gamedevproject.MovementClasses
 
             UpdatePosition(level, player, gameTime);
         }
+            // ... (existing code)
 
-        public void UpdatePosition(Level level, IMovable player, GameTime gameTime)
-        {
-            player.IsOnGround = false;
-
-            Vector2 newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y,48,48);
-
-            foreach (var collider in level.GetNearestColliders(newBounds))
+            public void UpdatePosition(Level level, IMovable player, GameTime gameTime)
             {
-                if (newPosition.X != player.Position.X)
+                player.IsOnGround = false;
+
+                Vector2 newPosition = player.Position + player.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                Rectangle newBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y, 48, 48);
+
+                foreach (var collider in level.GetNearestColliders(newBounds))
                 {
-                    newBounds = new Rectangle((int)newPosition.X, (int)player.Position.Y,48,48);
+                    if (newPosition.X != player.Position.X)
+                    {
+                        newBounds = new Rectangle((int)newPosition.X, (int)player.Position.Y, 48, 48);
+                        if (newBounds.Intersects(collider))
+                        {
+                            if (newPosition.X > player.Position.X) newPosition.X = collider.Left - 48;
+                            else newPosition.X = collider.Right;
+                            continue;
+                        }
+                    }
+
+                    newBounds = new Rectangle((int)player.Position.X, (int)newPosition.Y, 48, 48);
                     if (newBounds.Intersects(collider))
                     {
-                        if (newPosition.X > player.Position.X) newPosition.X = collider.Left - 48;
-                        else newPosition.X = collider.Right;
-                        continue;
+                        if (player.Direction.Y > 0)
+                        {
+                            newPosition.Y = collider.Top - 48;
+                            player.IsOnGround = true;
+                            player.Direction = new Vector2(player.Direction.X, -player.Direction.Y * BouncinessFactor); // Apply bounciness on Y-axis
+                        }
+                        else
+                        {
+                            newPosition.Y = collider.Bottom;
+                            player.Direction = new Vector2(player.Direction.X, -player.Direction.Y * BouncinessFactor); // Apply bounciness on Y-axis
+                        }
                     }
                 }
-
-                newBounds = new Rectangle((int)player.Position.X, (int)newPosition.Y,48,48);
-                if (newBounds.Intersects(collider))
-                {
-                    if (player.Direction.Y > 0)
-                    {
-                        newPosition.Y = collider.Top - 48;
-                        player.IsOnGround = true;
-                        player.Direction = new Vector2(player.Direction.X, 0);
-                    }
-                    else
-                    {
-                        newPosition.Y = collider.Bottom;
-                        player.Direction = new Vector2(player.Direction.X, 0);
-                    }
-                }
+                player.Position = newPosition;
             }
-            player.Position = newPosition;
-        }
+
     }
 }
