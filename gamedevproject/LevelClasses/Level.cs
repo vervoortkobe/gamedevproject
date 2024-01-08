@@ -92,9 +92,13 @@ namespace gamedevproject.LevelClasses
                 case '1':
                     return LoadStartTile(x, y);
                 case '2':
-                    return LoadEnemySpawnTile(x, y);
-                case '3':
                     return LoadEndTile(x, y);
+                case 'B':
+                    return LoadEnemySpawnTile(x, y, EnemyType.BOWMAN);
+                case 'A':
+                    return LoadEnemySpawnTile(x, y, EnemyType.AXEMAN);
+                case 'S':
+                    return LoadEnemySpawnTile(x, y, EnemyType.SPEARMAN);
                 case '#':
                     return LoadSpecificTile("Block1", 7, TileCollision.Impassable);
                 default:
@@ -116,7 +120,7 @@ namespace gamedevproject.LevelClasses
             return new LevelTile(null, TileCollision.Passable);
         }
 
-        private LevelTile LoadEnemySpawnTile(int x, int y)
+        private LevelTile LoadEnemySpawnTile(int x, int y, EnemyType enemyType)
         {
             if(Enemies == null)
             {
@@ -127,7 +131,7 @@ namespace gamedevproject.LevelClasses
 
             spawn = new Vector2(rect.X, rect.Top);
 
-            enemies.Add(new Enemy(this, spawn));
+            enemies.Add(new Enemy(this, spawn,enemyType));
 
             return new LevelTile(null, TileCollision.Passable);
         }

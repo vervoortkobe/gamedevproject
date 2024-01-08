@@ -10,6 +10,10 @@ using System;
 
 namespace gamedevproject.LevelObjects
 {
+    internal enum EnemyType
+    {
+        BOWMAN,AXEMAN,SPEARMAN 
+    }
     internal class Enemy : IMovable, IGameObject
     {
         Animation animation;
@@ -38,11 +42,13 @@ namespace gamedevproject.LevelObjects
         public StateManager StateManager { get; set; }
         public bool IsOnGround { get; set; }
 
-        public Enemy(Level level, Vector2 position)
+        public Enemy(Level level, Vector2 position, EnemyType enemyType)
         {
             this.level = level;
 
-            LoadContent();
+            LoadContent(enemyType);
+
+            MovementManager = new MovementManager(level);
 
             Position = position;
             IsOnGround = false;
@@ -53,23 +59,48 @@ namespace gamedevproject.LevelObjects
             MaxDistance = 320;
         }
 
-        public void LoadContent()
+        public void LoadContent(EnemyType enemyType)
         {
-            //Sprite aanpassen naar Enemy Sprite, liefst 3 verschillende;
-            enemyTexture = level.Content.Load<Texture2D>("Sprites/Block1");
 
-            animation = new Animation();
+            switch (enemyType)
+            {
+                case EnemyType.BOWMAN:
+                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy1");
 
-            MovementManager = new MovementManager(level);
+                    animation = new Animation();
+                    animation.maxFrames = 13;
+                    animation.frameY = 3;
+                    animation.GetFrames(48, 48);
+                    break;
+                case EnemyType.AXEMAN:
+                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy3");
+
+                    animation = new Animation();
+                    animation.maxFrames = 6;
+                    animation.frameY = 4;
+                    animation.GetFrames(48, 48);
+                    break;
+                case EnemyType.SPEARMAN:
+                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy2");
+
+                    animation = new Animation();
+                    animation.maxFrames = 6;
+                    animation.frameY = 4;
+                    animation.GetFrames(48, 48);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, Position, Bounds, Color.White);
+            spriteBatch.Draw(enemyTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0, 0), new Vector2(1, 1), SpriteEffects, 0f);
         }
 
         public void Update(GameTime gameTime)
         {
+            animation.Update(gameTime);
             Move(gameTime);
         }
 
