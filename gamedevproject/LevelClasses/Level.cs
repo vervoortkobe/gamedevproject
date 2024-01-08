@@ -26,7 +26,7 @@ namespace gamedevproject.LevelClasses
         public List<Coin> Coins { get { return coins; } }
         private List<Coin> coins;
 
-        private int score = 0;
+        private static int score = 0;
         private SpriteFont spriteFont;
 
         public float Gravity = 1250f;
