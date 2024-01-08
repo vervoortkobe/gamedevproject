@@ -23,12 +23,19 @@ namespace gamedevproject.LevelClasses
         public List<Enemy> Enemies { get { return enemies; } }
         private List<Enemy> enemies;
 
+        public List<Coin> Coins { get { return coins; } }
+        private List<Coin> coins;
+
+        private int score = 0;
+
         public float Gravity = 1250f;
 
         private Vector2 start;
+        
         private Vector2 spawn;
+        
         private Point end;
-
+        
         public bool ReachedExit { get; set; }
 
         public ContentManager Content { get { return content; } }
@@ -88,12 +95,14 @@ namespace gamedevproject.LevelClasses
                     return LoadStartTile(x, y);
                 case '2':
                     return LoadEndTile(x, y);
-                case 'B':
-                    return LoadEnemySpawnTile(x, y, EnemyType.BOWMAN);
-                case 'A':
-                    return LoadEnemySpawnTile(x, y, EnemyType.AXEMAN);
+                case 'I':
+                    return LoadEnemySpawnTile(x, y, EnemyType.IDLE);
+                case 'P':
+                    return LoadEnemySpawnTile(x, y, EnemyType.PATROL);
                 case 'S':
-                    return LoadEnemySpawnTile(x, y, EnemyType.SPEARMAN);
+                    return LoadEnemySpawnTile(x, y, EnemyType.SEEKER);
+                case '@':
+                    return LoadCoinTile(x, y); 
                 case '#':
                     return LoadSpecificTile("Block1", 7, TileCollision.Impassable);
                 default:
@@ -131,14 +140,27 @@ namespace gamedevproject.LevelClasses
             return new LevelTile(null, TileCollision.Passable);
         }
 
+        private LevelTile LoadCoinTile(int x, int y)
+        {
+            if (Coins == null)
+            {
+                coins = new List<Coin>();
+            }
+
+            Rectangle rect = GetBounds(x, y);
+
+            spawn = new Vector2(rect.X, rect.Top);
+
+            coins.Add(new Coin(this, spawn));
+
+            return new LevelTile(null, TileCollision.Passable);
+        }
+
         private LevelTile LoadEndTile(int x, int y)
         {
-            if (Player != null)
-                throw new NotSupportedException("A level may only have one end point.");
-
             end = GetBounds(x, y).Center;
 
-            return new LevelTile(Content.Load<Texture2D>("Sprites/exitdoor"), TileCollision.Exit);
+            return new LevelTile(Content.Load<Texture2D>("Sprites/Exit"), TileCollision.Exit);
         }
 
         private LevelTile LoadTileFromContent(string name, TileCollision collision)
@@ -228,13 +250,30 @@ namespace gamedevproject.LevelClasses
             {
                 ReachedExit = true;
             }
+
+            UpdateCoins(gameTime);
+        }
+
+        private void UpdateCoins(GameTime gameTime)
+        {
+            for (int i = 0; i < coins.Count; ++i)
+            {
+                Coin coin = coins[i];
+
+                coin.Update(gameTime);
+
+                if (coin.Bounds.Intersects(Player.Bounds))
+                {
+                    coins.RemoveAt(i--);
+                    score += 1;
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Background, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, new Vector2(0.659f, 0.63f), SpriteEffects.None, 0f);
             DrawTiles(spriteBatch);
-            player.Draw(spriteBatch);
             if (Enemies != null)
             {
                 foreach (var enemy in Enemies)
@@ -243,7 +282,16 @@ namespace gamedevproject.LevelClasses
                     enemy.Draw(spriteBatch);
                 }
             }
-            
+            if (Coins != null)
+            {
+                foreach (var coin in Coins)
+
+                {
+                    coin.Draw(spriteBatch);
+                }
+            }
+            player.Draw(spriteBatch);
+
         }
 
         public void Unload()

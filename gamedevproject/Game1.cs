@@ -37,7 +37,6 @@ namespace gamedevproject
 
         protected override void Update(GameTime gameTime)
         {
-            //Add GameButtons for Pausing / Exit / Restart Level
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
@@ -46,9 +45,21 @@ namespace gamedevproject
                 _gsman.SetGameState(GameStates.LEVEL1);
             }
 
+            //Press R to Restart the Current Level
+
+            if (Keyboard.GetState().IsKeyDown(Keys.R))
+            {
+                _gsman.SetGameState(_gsman.CurrentGameState.State);
+            }
+
             if (_gsman.IsLevelCompleted())
             {
-                _gsman.SetGameState(GameStates.LEVEL2);
+                _gsman.SetGameState(_gsman.CurrentGameState.State + 1);
+            }
+
+            if(_gsman.CurrentGameState.State == GameStates.VICTORY && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                Exit();
             }
 
             _gsman.CurrentGameState.Update(gameTime);

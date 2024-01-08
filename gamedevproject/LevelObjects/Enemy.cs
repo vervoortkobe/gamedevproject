@@ -13,13 +13,15 @@ namespace gamedevproject.LevelObjects
 {
     internal enum EnemyType
     {
-        BOWMAN,AXEMAN,SPEARMAN 
+        IDLE,PATROL,SEEKER 
     }
     internal class Enemy : IMovable, IGameObject
     {
         Animation animation;
 
-        Texture2D enemyTexture;
+        Texture2D Texture;
+
+        EnemyType EnemyType;
 
         Level level;
 
@@ -47,7 +49,9 @@ namespace gamedevproject.LevelObjects
         {
             this.level = level;
 
-            LoadContent(enemyType);
+            this.EnemyType = enemyType;
+
+            LoadContent();
 
             MovementManager = new MovementManager(level);
 
@@ -57,36 +61,36 @@ namespace gamedevproject.LevelObjects
             Speed = 1.0f;
 
             DistanceTraveled = 0;
-            MaxDistance = 320;
+            MaxDistance = 96;
         }
 
-        public void LoadContent(EnemyType enemyType)
+        public void LoadContent()
         {
 
-            switch (enemyType)
+            switch (EnemyType)
             {
-                case EnemyType.BOWMAN:
-                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy1");
+                case EnemyType.IDLE:
+                    Texture = level.Content.Load<Texture2D>("Sprites/Enemy1");
 
                     animation = new Animation();
-                    animation.maxFrames = 13;
-                    animation.frameY = 3;
+                    animation.maxFrames = 1;
+                    animation.frameY = 0;
                     animation.GetFrames(48, 48);
                     break;
-                case EnemyType.AXEMAN:
-                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy3");
+                case EnemyType.PATROL:
+                    Texture = level.Content.Load<Texture2D>("Sprites/Enemy2");
 
                     animation = new Animation();
                     animation.maxFrames = 6;
-                    animation.frameY = 4;
+                    animation.frameY = 1;
                     animation.GetFrames(48, 48);
                     break;
-                case EnemyType.SPEARMAN:
-                    enemyTexture = level.Content.Load<Texture2D>("Sprites/enemy2");
+                case EnemyType.SEEKER:
+                    Texture = level.Content.Load<Texture2D>("Sprites/Enemy3");
 
                     animation = new Animation();
                     animation.maxFrames = 6;
-                    animation.frameY = 4;
+                    animation.frameY = 1;
                     animation.GetFrames(48, 48);
                     break;
                 default:
@@ -96,7 +100,7 @@ namespace gamedevproject.LevelObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0, 0), new Vector2(1, 1), SpriteEffects, 0f);
+            spriteBatch.Draw(Texture, Position, animation.CurrentFrame.SourceRect, Color.White, 0f, new Vector2(0, 0), new Vector2(1, 1), SpriteEffects, 0f);
         }
 
         public void Update(GameTime gameTime)
@@ -112,23 +116,44 @@ namespace gamedevproject.LevelObjects
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Position.X < level.Player.Position.X)
+            switch (EnemyType)
             {
-                SpriteEffects = SpriteEffects.None;
-                velocityX += 200f * deltaTime;
-            }
-            if (Position.X > level.Player.Position.X)
-            {
-                SpriteEffects = SpriteEffects.FlipHorizontally;
-                velocityX += -200f * deltaTime;
-            }
-            if (Position.X == level.Player.Position.X)
-            {
-                velocityX = 0;
+                case EnemyType.IDLE:
+                case EnemyType.PATROL:
+                    if (Position.X < level.Player.Position.X)
+                    {
+                        SpriteEffects = SpriteEffects.FlipHorizontally;
+                    }
+                    if (Position.X > level.Player.Position.X)
+                    {
+                        SpriteEffects = SpriteEffects.None;
+                    }
+                    break;
+                case EnemyType.SEEKER:
+
+                    if (Position.X < level.Player.Position.X)
+                    {
+                        SpriteEffects = SpriteEffects.FlipHorizontally;
+                        velocityX += 200f * deltaTime;
+                    }
+                    if (Position.X > level.Player.Position.X)
+                    {
+                        SpriteEffects = SpriteEffects.None;
+                        velocityX += -200f * deltaTime;
+                    }
+                    if (Position.X == level.Player.Position.X)
+                    {
+                        velocityX = 0;
+                    }
+
+                    //Set max speed along the X-axis left and right
+                    MathHelper.Clamp(velocityX, -0.25f, 0.25f);
+                    break;
+                default:
+                    break;
             }
 
-            //Set max speed along the X-axis left and right
-            MathHelper.Clamp(velocityX, -0.5f, 0.5f);
+            
 
             velocityY += level.Gravity * deltaTime;
 
