@@ -34,7 +34,6 @@ namespace gamedevproject.PlayerClasses
         }
         public float Speed { get; set; }
         public bool IsOnGround { get; set; }
-        public bool HasReachedExit { get; set; }
         public SpriteEffects SpriteEffects { get; set; }
         public MovementManager MovementManager { get; set; }
         public StateManager StateManager { get; set; }
@@ -66,7 +65,6 @@ namespace gamedevproject.PlayerClasses
         {
             Position = position;
             IsOnGround = true;
-            HasReachedExit = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -76,10 +74,6 @@ namespace gamedevproject.PlayerClasses
 
         public void Update(GameTime gameTime)
         {
-            if (level.end)
-            {
-                HasReachedExit = true;
-            }
             animation.Update(gameTime);
             Move(gameTime);
         }

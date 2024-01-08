@@ -34,6 +34,8 @@ namespace gamedevproject.GameStateClasses
                 new LevelState(Game,GameStateClasses.GameStates.LEVEL1),
                 new LevelState(Game,GameStateClasses.GameStates.LEVEL2),
                 new LevelState(Game,GameStateClasses.GameStates.LEVEL3),
+                new VictoryState(Game),
+
             };
 
             CurrentGameState = GameStates[0];
@@ -64,7 +66,7 @@ namespace gamedevproject.GameStateClasses
         public bool IsLevelCompleted()
         {
             if(CurrentGameState.State == GameStateClasses.GameStates.LEVEL1){
-                return CurrentGameState.Level.Player.HasReachedExit;
+                return CurrentGameState.Level.ReachedExit;
             }
             else
                return false;

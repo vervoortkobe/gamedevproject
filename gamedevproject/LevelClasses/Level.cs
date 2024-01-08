@@ -29,6 +29,8 @@ namespace gamedevproject.LevelClasses
         private Vector2 spawn;
         private Point end;
 
+        public bool ReachedExit { get; set; }
+
         public ContentManager Content { get { return content; } }
         private ContentManager content;
 
@@ -220,6 +222,11 @@ namespace gamedevproject.LevelClasses
                 {
                     enemy.Update(gameTime);
                 }
+            }
+
+            if (player.Bounds.Contains(end))
+            {
+                ReachedExit = true;
             }
         }
 

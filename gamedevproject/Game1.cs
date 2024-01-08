@@ -51,11 +51,6 @@ namespace gamedevproject
                 _gsman.SetGameState(GameStates.LEVEL2);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-            {
-                _gsman.SetGameState(GameStates.LEVEL3);
-            }
-
             _gsman.CurrentGameState.Update(gameTime);
             
             base.Update(gameTime);
